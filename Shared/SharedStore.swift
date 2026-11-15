@@ -1,0 +1,111 @@
+import Foundation
+
+public enum AppGroup {
+    public static let identifier = "group.com.example.radarglance"
+
+    public static var containerURL: URL? {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
+    }
+
+    public static var defaults: UserDefaults {
+        UserDefaults(suiteName: identifier) ?? .standard
+    }
+}
+
+/// Tile width options. The tile is square, so this is also its height.
+public enum ZoomLevel: Int, CaseIterable, Codable, Sendable, Identifiable {
+    case miles40 = 40
+    case miles80 = 80
+    case miles160 = 160
+
+    public static let `default` = ZoomLevel.miles80
+
+    public var id: Int { rawValue }
+    public var miles: Double { Double(rawValue) }
+    public var label: String { "\(rawValue) mi" }
+}
+
+/// A position fix, as stored in the App Group and drawn by the compositor.
+public struct LocationFix: Codable, Sendable, Equatable {
+    public var latitude: Double
+    public var longitude: Double
+    /// Degrees clockwise from north. Only set when moving faster than 2 m/s.
+    public var course: Double?
+    public var timestamp: Date
+
+    public init(latitude: Double, longitude: Double, course: Double? = nil, timestamp: Date) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.course = course
+        self.timestamp = timestamp
+    }
+}
+
+/// Settings and cross-process state shared by the app and the widget through the App Group.
+public final class SharedStore: @unchecked Sendable {
+    private let defaults: UserDefaults
+
+    public init(defaults: UserDefaults = AppGroup.defaults) {
+        self.defaults = defaults
+    }
+
+    private enum Key {
+        static let zoom = "zoomMiles"
+        static let lastNetworkAttempt = "lastNetworkAttempt"
+        static let lastSuccessfulRefresh = "lastSuccessfulRefresh"
+        static let forceRefreshRequestedAt = "forceRefreshRequestedAt"
+        static let forceRefreshHandledAt = "forceRefreshHandledAt"
+        static let cachedLocation = "cachedLocation"
+        static let onboardingDone = "onboardingDone"
+    }
+
+    public var zoom: ZoomLevel {
+        get { ZoomLevel(rawValue: defaults.integer(forKey: Key.zoom)) ?? .default }
+        set { defaults.set(newValue.rawValue, forKey: Key.zoom) }
+    }
+
+    public var lastNetworkAttempt: Date? {
+        get { defaults.object(forKey: Key.lastNetworkAttempt) as? Date }
+        set { defaults.set(newValue, forKey: Key.lastNetworkAttempt) }
+    }
+
+    public var lastSuccessfulRefresh: Date? {
+        get { defaults.object(forKey: Key.lastSuccessfulRefresh) as? Date }
+        set { defaults.set(newValue, forKey: Key.lastSuccessfulRefresh) }
+    }
+
+    /// Set by the widget's refresh button; read by the timeline provider.
+    public var forceRefreshRequestedAt: Date? {
+        get { defaults.object(forKey: Key.forceRefreshRequestedAt) as? Date }
+        set { defaults.set(newValue, forKey: Key.forceRefreshRequestedAt) }
+    }
+
+    public var forceRefreshHandledAt: Date? {
+        get { defaults.object(forKey: Key.forceRefreshHandledAt) as? Date }
+        set { defaults.set(newValue, forKey: Key.forceRefreshHandledAt) }
+    }
+
+    public var cachedLocation: LocationFix? {
+        get {
+            guard let data = defaults.data(forKey: Key.cachedLocation) else { return nil }
+            return try? JSONDecoder().decode(LocationFix.self, from: data)
+        }
+        set {
+            defaults.set(newValue.flatMap { try? JSONEncoder().encode($0) }, forKey: Key.cachedLocation)
+        }
+    }
+
+    public var onboardingDone: Bool {
+        get { defaults.bool(forKey: Key.onboardingDone) }
+        set { defaults.set(newValue, forKey: Key.onboardingDone) }
+    }
+
+    /// True if the refresh button was tapped after the last time a forced refresh was handled.
+    /// Marks the request as handled.
+    public func consumeForceRefreshRequest(now: Date) -> Bool {
+        guard let requested = forceRefreshRequestedAt else { return false }
+        if let handled = forceRefreshHandledAt, handled >= requested { return false }
+        forceRefreshHandledAt = now
+        return true
+    }
+}

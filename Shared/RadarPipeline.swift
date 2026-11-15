@@ -1,0 +1,244 @@
+import CoreLocation
+import Foundation
+import MapKit
+import os
+
+public enum RadarFailure: String, Codable, Sendable, Equatable {
+    case locationOff
+    case locationUnavailable
+    case noCoverage
+    case network
+    case service
+
+    /// Short text for the widget. Never asks the driver to pick up the phone.
+    public var message: String {
+        switch self {
+        case .locationOff: "Location off"
+        case .locationUnavailable: "No location"
+        case .noCoverage: "No radar coverage here"
+        case .network: "Offline"
+        case .service: "Radar unavailable"
+        }
+    }
+
+    /// Whether a cached image would mislead (wrong place, or the user turned location off).
+    public var hidesImage: Bool {
+        switch self {
+        case .locationOff, .noCoverage: true
+        case .locationUnavailable, .network, .service: false
+        }
+    }
+}
+
+public struct RadarSnapshot: Sendable, Equatable {
+    /// Path of the composite PNG, if there is one.
+    public var imageURL: URL?
+    public var metadata: RadarMetadata?
+    public var failure: RadarFailure?
+    /// The refresh was skipped because the last network attempt was under 30 s ago.
+    public var throttled: Bool
+
+    public init(imageURL: URL?, metadata: RadarMetadata?, failure: RadarFailure?, throttled: Bool) {
+        self.imageURL = imageURL
+        self.metadata = metadata
+        self.failure = failure
+        self.throttled = throttled
+    }
+}
+
+/// Location → radar frame → base map → composite → cache.
+public actor RadarPipeline {
+    /// NOAA is called at most once per 30 s per device, forced or not.
+    public static let minimumInterval: TimeInterval = 30
+    /// Reuse the cached base map while the user stays within this fraction of the tile
+    /// width from its center.
+    public static let baseMapReuseFraction = 0.10
+    public static let baseMapMaxAge: TimeInterval = 7 * 24 * 3600
+    /// Below this much headroom, skip the map snapshot and draw on a plain tile.
+    public static let lowMemoryBytes = 8 * 1024 * 1024
+
+    private let client: RadarClient
+    private let location: LocationProviding
+    private let renderer: BaseMapRendering
+    private let cache: RadarCache
+    private let store: SharedStore
+    private let processName: String
+    private let now: @Sendable () -> Date
+    private let availableMemory: @Sendable () -> Int
+
+    public init(client: RadarClient, location: LocationProviding, renderer: BaseMapRendering,
+                cache: RadarCache, store: SharedStore, processName: String,
+                now: @escaping @Sendable () -> Date = { Date() },
+                availableMemory: @escaping @Sendable () -> Int = { os_proc_available_memory() }) {
+        self.client = client
+        self.location = location
+        self.renderer = renderer
+        self.cache = cache
+        self.store = store
+        self.processName = processName
+        self.now = now
+        self.availableMemory = availableMemory
+    }
+
+    /// The real services, sharing state through the App Group.
+    public static func live(location: LocationProviding, processName: String) -> RadarPipeline {
+        RadarPipeline(client: RadarClient(), location: location, renderer: BaseMapRenderer(),
+                      cache: .appGroup(), store: SharedStore(), processName: processName)
+    }
+
+    /// The last cached image, without touching the network or location.
+    public nonisolated func cachedSnapshot(zoom: ZoomLevel) -> RadarSnapshot {
+        snapshotFromCache(zoom: zoom, failure: nil, throttled: false)
+    }
+
+    public func refresh(force: Bool, zoom: ZoomLevel) async -> RadarSnapshot {
+        let start = now()
+        var debug = DebugRecord(process: processName, attemptTime: start, forced: force, outcome: "")
+        defer { cache.writeDebug(debug) }
+
+        if let last = store.lastNetworkAttempt, start.timeIntervalSince(last) < Self.minimumInterval, last <= start {
+            debug.outcome = "throttled (last attempt \(Int(start.timeIntervalSince(last))) s ago)"
+            return snapshotFromCache(zoom: zoom, failure: nil, throttled: true)
+        }
+
+        let fix: LocationFix
+        let locationStale: Bool
+        switch await location.currentLocation() {
+        case .denied:
+            debug.outcome = "location off"
+            return snapshotFromCache(zoom: zoom, failure: .locationOff, throttled: false)
+        case .unavailable:
+            debug.outcome = "no location"
+            return snapshotFromCache(zoom: zoom, failure: .locationUnavailable, throttled: false)
+        case let .fix(value, stale):
+            fix = value
+            locationStale = stale
+        }
+
+        guard let region = RadarRegion.region(latitude: fix.latitude, longitude: fix.longitude) else {
+            debug.outcome = "no coverage at \(fix.latitude), \(fix.longitude)"
+            return snapshotFromCache(zoom: zoom, failure: .noCoverage, throttled: false)
+        }
+
+        store.lastNetworkAttempt = start
+        recordMemory("start", into: &debug)
+
+        // Reuse the cached base map if the user hasn't moved far; the radar is then fetched
+        // for the base map's box so the two still line up.
+        let userPoint = MKMapPoint(CLLocationCoordinate2D(latitude: fix.latitude, longitude: fix.longitude))
+        var box = MercatorBox(center: CLLocationCoordinate2D(latitude: fix.latitude, longitude: fix.longitude),
+                              widthMiles: zoom.miles)
+        var baseMapPNG: Data?
+        if let cached = cache.readBaseMap(zoom: zoom),
+           cached.info.box.isNearCenter(userPoint, fraction: Self.baseMapReuseFraction),
+           start.timeIntervalSince(cached.info.createdAt) < Self.baseMapMaxAge {
+            box = cached.info.box
+            baseMapPNG = cached.png
+            debug.baseMapReused = true
+            debug.alignmentErrorPixels = cached.info.alignmentErrorPixels
+        }
+        debug.bbox = box.bboxString
+
+        let radarTime: RadarTime?
+        do {
+            radarTime = try await client.latestRadarTime(region: region, force: force)
+        } catch {
+            // Without TIME the image is still the newest frame; the label falls back to fetch time.
+            radarTime = nil
+            if Self.isOffline(error) {
+                debug.outcome = "offline: \(error.localizedDescription)"
+                return snapshotFromCache(zoom: zoom, failure: .network, throttled: false)
+            }
+        }
+        debug.radarTimeRaw = radarTime?.raw
+
+        let radar: RadarImage
+        do {
+            radar = try await client.fetchImage(region: region, box: box, time: radarTime)
+            debug.wmsURL = radar.url.absoluteString
+            debug.httpStatus = radar.httpStatus
+            recordMemory("radar downloaded", into: &debug)
+        } catch {
+            debug.wmsURL = await client.lastRequestURL?.absoluteString
+            debug.httpStatus = await client.lastHTTPStatus
+            debug.outcome = "radar failed: \(Self.describe(error))"
+            return snapshotFromCache(zoom: zoom, failure: Self.isOffline(error) ? .network : .service, throttled: false)
+        }
+
+        if baseMapPNG == nil {
+            let available = availableMemory()
+            if available > 0 && available < Self.lowMemoryBytes {
+                debug.baseMapReused = false
+                recordMemory("skipped base map (low memory)", into: &debug)
+            } else {
+                do {
+                    let base = try await renderer.render(box: box, size: RadarClient.imageSize)
+                    baseMapPNG = base.png
+                    debug.baseMapReused = false
+                    debug.alignmentErrorPixels = base.alignmentErrorPixels
+                    try? cache.writeBaseMap(base.png, info: BaseMapInfo(
+                        box: box, createdAt: start, alignmentErrorPixels: base.alignmentErrorPixels), zoom: zoom)
+                    recordMemory("base map rendered", into: &debug)
+                } catch {
+                    // Radar on a plain dark tile is still useful.
+                    recordMemory("base map failed: \(error.localizedDescription)", into: &debug)
+                }
+            }
+        }
+
+        let png = RadarCompositor.compose(.init(
+            baseMapPNG: baseMapPNG, radarPNG: radar.png, box: box,
+            user: fix, userIsStale: locationStale, zoom: zoom))
+        recordMemory("composited", into: &debug)
+
+        let metadata = RadarMetadata(
+            radarTime: radarTime?.date, fetchTime: start,
+            latitude: fix.latitude, longitude: fix.longitude,
+            locationStale: locationStale, zoom: zoom)
+        do {
+            try cache.writeComposite(png, metadata: metadata)
+        } catch {
+            debug.outcome = "cache write failed: \(error.localizedDescription)"
+            return snapshotFromCache(zoom: zoom, failure: .service, throttled: false)
+        }
+        store.lastSuccessfulRefresh = start
+        debug.outcome = radarTime == nil ? "fetched (no TIME; label uses fetch time)" : "fetched"
+        return RadarSnapshot(imageURL: cache.compositeURL(zoom: zoom), metadata: metadata,
+                             failure: nil, throttled: false)
+    }
+
+    // MARK: Helpers
+
+    /// The composite for `zoom`, else the newest at any zoom, else no image.
+    private nonisolated func snapshotFromCache(zoom: ZoomLevel, failure: RadarFailure?, throttled: Bool) -> RadarSnapshot {
+        let metadata = cache.readMetadata(zoom: zoom) ?? cache.latestMetadata()
+        return RadarSnapshot(imageURL: metadata.map { cache.compositeURL(zoom: $0.zoom) },
+                             metadata: metadata, failure: failure, throttled: throttled)
+    }
+
+    private func recordMemory(_ step: String, into debug: inout DebugRecord) {
+        debug.memory.append(MemoryReading(step: step, availableMB: Double(availableMemory()) / 1_048_576))
+    }
+
+    static func isOffline(_ error: Error) -> Bool {
+        guard let urlError = error as? URLError else { return false }
+        switch urlError.code {
+        case .notConnectedToInternet, .networkConnectionLost, .timedOut, .cannotFindHost,
+             .cannotConnectToHost, .dnsLookupFailed, .dataNotAllowed, .internationalRoamingOff:
+            return true
+        default:
+            return false
+        }
+    }
+
+    static func describe(_ error: Error) -> String {
+        switch error {
+        case let RadarClientError.notPNG(status, message):
+            "not a PNG (HTTP \(status)): \(message ?? "no message")"
+        case let RadarClientError.httpStatus(status):
+            "HTTP \(status)"
+        default:
+            error.localizedDescription
+        }
+    }
+}

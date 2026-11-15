@@ -1,0 +1,104 @@
+name: RadarGlance
+
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: XXXXXXXXXX
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+targets:
+  Shared:
+    type: framework
+    platform: iOS
+    sources: [Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.radarglance.shared
+        GENERATE_INFOPLIST_FILE: YES
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEFINES_MODULE: YES
+
+  SharedTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: SharedTests
+    dependencies:
+      - target: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.radarglance.sharedtests
+        GENERATE_INFOPLIST_FILE: YES
+
+  RadarGlance:
+    type: application
+    platform: iOS
+    sources: [RadarGlance]
+    dependencies:
+      - target: Shared
+      - target: RadarGlanceWidget
+    info:
+      path: RadarGlance/Info.plist
+      properties:
+        CFBundleDisplayName: Radar Glance
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        NSLocationWhenInUseUsageDescription: >-
+          Radar Glance centers the weather radar on where you are, in the app and in
+          the CarPlay widget.
+    entitlements:
+      path: RadarGlance/RadarGlance.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.example.radarglance]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.radarglance
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  RadarGlanceWidget:
+    type: app-extension
+    platform: iOS
+    sources: [RadarGlanceWidget]
+    dependencies:
+      - target: Shared
+        embed: false
+    info:
+      path: RadarGlanceWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Radar Glance
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        NSWidgetWantsLocation: true
+        NSLocationWhenInUseUsageDescription: >-
+          Radar Glance centers the weather radar on where you are.
+    entitlements:
+      path: RadarGlanceWidget/RadarGlanceWidget.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.example.radarglance]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.radarglance.widget
+
+schemes:
+  RadarGlance:
+    build:
+      targets:
+        RadarGlance: all
+        SharedTests: [test]
+    test:
+      targets: [SharedTests]
+    run:
+      config: Debug
