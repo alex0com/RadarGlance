@@ -22,7 +22,7 @@ struct RadarTimelineProvider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: RadarConfigurationIntent, in context: Context) async -> RadarEntry {
-        let zoom = configuration.zoom.resolved(store: SharedStore())
+        let zoom = configuration.zoom.resolved(store: SharedStore(), family: context.family)
         let snapshot = await MainActor.run { makePipeline() }
             .cachedSnapshot(zoom: zoom, resolution: Self.resolution(for: context.family))
         return entry(from: snapshot, date: Date(), context: context) ?? .placeholder()
@@ -33,7 +33,7 @@ struct RadarTimelineProvider: AppIntentTimelineProvider {
         let now = Date()
         let force = store.consumeForceRefreshRequest(now: now)
         let pipeline = await MainActor.run { makePipeline() }
-        let snapshot = await pipeline.refresh(force: force, zoom: configuration.zoom.resolved(store: store),
+        let snapshot = await pipeline.refresh(force: force, zoom: configuration.zoom.resolved(store: store, family: context.family),
                                               resolution: Self.resolution(for: context.family))
 
         let current = entry(from: snapshot, date: now, context: context) ?? .placeholder(date: now)

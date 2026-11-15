@@ -14,15 +14,19 @@ public enum RadarCompositor {
     public struct Input: Sendable {
         public var baseMapPNG: Data?
         public var radarPNG: Data
+        /// Area the radar image covers; usually larger than `box`.
+        public var radarBox: MercatorBox
+        /// Area of the composite.
         public var box: MercatorBox
         public var user: LocationFix?
         public var userIsStale: Bool
         public var size: Int
 
-        public init(baseMapPNG: Data?, radarPNG: Data, box: MercatorBox, user: LocationFix?,
+        public init(baseMapPNG: Data?, radarPNG: Data, radarBox: MercatorBox, box: MercatorBox, user: LocationFix?,
                     userIsStale: Bool, size: Int = TileResolution.standard.pixels) {
             self.baseMapPNG = baseMapPNG
             self.radarPNG = radarPNG
+            self.radarBox = radarBox
             self.box = box
             self.user = user
             self.userIsStale = userIsStale
@@ -48,8 +52,19 @@ public enum RadarCompositor {
                 }
             }
             autoreleasepool {
-                if let radar = UIImage(data: input.radarPNG) {
-                    radar.draw(in: rect, blendMode: .normal, alpha: radarOpacity)
+                if let radar = UIImage(data: input.radarPNG)?.cgImage {
+                    let target = radarRect(radarBox: input.radarBox, tileBox: input.box, size: side)
+                    let cg = context.cgContext
+                    cg.saveGState()
+                    // Enlarging: keep NOAA's 1 km cells crisp. Shrinking: smooth.
+                    cg.interpolationQuality = target.width > CGFloat(radar.width) ? .none : .high
+                    cg.setAlpha(radarOpacity)
+                    // UIKit's context is flipped; draw the CGImage upright.
+                    cg.translateBy(x: 0, y: side)
+                    cg.scaleBy(x: 1, y: -1)
+                    cg.draw(radar, in: CGRect(x: target.minX, y: side - target.maxY,
+                                              width: target.width, height: target.height))
+                    cg.restoreGState()
                 }
             }
 
@@ -63,6 +78,13 @@ public enum RadarCompositor {
                 }
             }
         }
+    }
+
+    /// Where the radar image goes in a `size`×`size` composite of `tileBox` (origin top-left).
+    public static func radarRect(radarBox: MercatorBox, tileBox: MercatorBox, size: CGFloat) -> CGRect {
+        let scale = size / tileBox.width
+        return CGRect(x: (radarBox.minX - tileBox.minX) * scale, y: (radarBox.minY - tileBox.minY) * scale,
+                      width: radarBox.width * scale, height: radarBox.width * scale)
     }
 
     /// Sizes are in pixels of a 512 px tile, which the small widget shows at roughly 160 pt

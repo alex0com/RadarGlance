@@ -27,7 +27,24 @@ public struct RadarMetadata: Codable, Sendable, Equatable {
     public var displayTime: Date { radarTime ?? fetchTime }
 }
 
-/// The cached base map's coverage. Saved as `basemap-<zoom>.json`.
+/// The last radar image downloaded from NOAA. It covers `ZoomLevel.largest` around where it
+/// was fetched, so every zoom can be cut from it without another request.
+/// Saved as `radar.png` + `radar.json`.
+public struct RadarFrame: Codable, Sendable, Equatable {
+    public var box: MercatorBox
+    public var radarTime: Date?
+    public var radarTimeRaw: String?
+    public var fetchTime: Date
+
+    public init(box: MercatorBox, radarTime: RadarTime?, fetchTime: Date) {
+        self.box = box
+        self.radarTime = radarTime?.date
+        self.radarTimeRaw = radarTime?.raw
+        self.fetchTime = fetchTime
+    }
+}
+
+/// The cached base map's coverage. Saved as `basemap-<zoom>-<pixels>.json`.
 public struct BaseMapInfo: Codable, Sendable, Equatable {
     public var box: MercatorBox
     public var createdAt: Date
@@ -52,7 +69,13 @@ public struct DebugRecord: Codable, Sendable, Equatable {
     public var attemptTime: Date
     public var forced: Bool
     public var outcome: String
+    /// The WMS request's BBOX (always the largest zoom).
     public var bbox: String?
+    /// The composite's BBOX for the requested zoom.
+    public var tileBBox: String?
+    /// True when the composite was cut from an earlier radar download (no request made).
+    public var radarReused: Bool?
+    public var zoom: Int?
     public var wmsURL: String?
     public var httpStatus: Int?
     public var radarTimeRaw: String?
@@ -107,6 +130,8 @@ public struct RadarCache: Sendable {
         file("basemap-\(zoom.rawValue)-\(resolution.pixels).json")
     }
     private var debugURL: URL { file("debug.json") }
+    private var radarURL: URL { file("radar.png") }
+    private var radarFrameURL: URL { file("radar.json") }
 
     private func file(_ name: String) -> URL {
         directory.appending(path: name, directoryHint: .notDirectory)
@@ -135,6 +160,20 @@ public struct RadarCache: Sendable {
         }
         let newest = { (list: [RadarMetadata]) in list.max { $0.fetchTime < $1.fetchTime } }
         return newest(all.filter { $0.zoom == zoom }) ?? newest(all)
+    }
+
+    // MARK: Radar frame
+
+    public func writeRadar(_ png: Data, frame: RadarFrame) throws {
+        try png.write(to: radarURL, options: Self.writeOptions)
+        try write(frame, to: radarFrameURL)
+    }
+
+    public func readRadar() -> (png: Data, frame: RadarFrame)? {
+        guard let frame = read(RadarFrame.self, from: radarFrameURL),
+              let png = try? Data(contentsOf: radarURL)
+        else { return nil }
+        return (png, frame)
     }
 
     // MARK: Base map

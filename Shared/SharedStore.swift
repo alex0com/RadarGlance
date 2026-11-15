@@ -18,7 +18,11 @@ public enum ZoomLevel: Int, CaseIterable, Codable, Sendable, Identifiable {
     case miles80 = 80
     case miles160 = 160
 
-    public static let `default` = ZoomLevel.miles80
+    /// Defaults: zoomed in for checking on foot, wide for driving.
+    public static let phoneDefault = ZoomLevel.miles40
+    public static let carDefault = ZoomLevel.miles160
+    /// The radar image always covers this width; every zoom is cut from it.
+    public static let largest = ZoomLevel.miles160
 
     public var id: Int { rawValue }
     public var miles: Double { Double(rawValue) }
@@ -63,7 +67,8 @@ public final class SharedStore: @unchecked Sendable {
     }
 
     private enum Key {
-        static let zoom = "zoomMiles"
+        static let phoneZoom = "phoneZoomMiles"
+        static let carZoom = "carZoomMiles"
         static let lastNetworkAttempt = "lastNetworkAttempt"
         static let lastSuccessfulRefresh = "lastSuccessfulRefresh"
         static let forceRefreshRequestedAt = "forceRefreshRequestedAt"
@@ -72,9 +77,17 @@ public final class SharedStore: @unchecked Sendable {
         static let onboardingDone = "onboardingDone"
     }
 
-    public var zoom: ZoomLevel {
-        get { ZoomLevel(rawValue: defaults.integer(forKey: Key.zoom)) ?? .default }
-        set { defaults.set(newValue.rawValue, forKey: Key.zoom) }
+    /// Used by the app and by medium/large widgets set to Automatic.
+    public var phoneZoom: ZoomLevel {
+        get { ZoomLevel(rawValue: defaults.integer(forKey: Key.phoneZoom)) ?? .phoneDefault }
+        set { defaults.set(newValue.rawValue, forKey: Key.phoneZoom) }
+    }
+
+    /// Used by small widgets set to Automatic. Small is the only size CarPlay shows, and
+    /// WidgetKit doesn't tell a widget whether it's in CarPlay.
+    public var carZoom: ZoomLevel {
+        get { ZoomLevel(rawValue: defaults.integer(forKey: Key.carZoom)) ?? .carDefault }
+        set { defaults.set(newValue.rawValue, forKey: Key.carZoom) }
     }
 
     public var lastNetworkAttempt: Date? {

@@ -15,15 +15,27 @@ final class AppModel {
     var onboardingDone: Bool {
         didSet { store.onboardingDone = onboardingDone }
     }
-    var zoom: ZoomLevel {
+    /// What the app shows, and medium/large widgets set to Automatic. Changing it cuts the
+    /// new zoom from the last radar download; no NOAA request.
+    var phoneZoom: ZoomLevel {
         didSet {
-            guard zoom != oldValue else { return }
-            store.zoom = zoom
-            Task { await refresh(force: true) }
+            guard phoneZoom != oldValue else { return }
+            store.phoneZoom = phoneZoom
+            Task { await recompose() }
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
-    /// The app shows what the small (CarPlay) widget gets.
+    /// Small widgets set to Automatic (CarPlay shows only the small size).
+    var carZoom: ZoomLevel {
+        didSet {
+            guard carZoom != oldValue else { return }
+            store.carZoom = carZoom
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+    }
+
+    /// Same image size as the small (CarPlay) widget.
     static let resolution = TileResolution.standard
 
     /// Set with `-testLocation lat,lon`; replaces GPS for Simulator testing.
@@ -38,7 +50,8 @@ final class AppModel {
         let locationService = LocationService(store: store)
         self.locationService = locationService
         authorization = locationService.authorizationStatus
-        zoom = store.zoom
+        phoneZoom = store.phoneZoom
+        carZoom = store.carZoom
         onboardingDone = store.onboardingDone
         pipeline = RadarPipeline.live(location: testLocation ?? locationService, processName: "app")
         locationService.onAuthorizationChange = { [weak self] status in
@@ -69,10 +82,15 @@ final class AppModel {
         guard !isRefreshing else { return }
         isRefreshing = true
         defer { isRefreshing = false }
-        let result = await pipeline.refresh(force: force, zoom: zoom, resolution: Self.resolution)
+        let result = await pipeline.refresh(force: force, zoom: phoneZoom, resolution: Self.resolution)
         apply(result)
-        // The widget re-reads the cache; its own refresh is throttled, so this costs no request.
+        // The widgets' own refresh is throttled right after this, so they cut their zoom
+        // from this download without another request.
         WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private func recompose() async {
+        apply(await pipeline.recompose(zoom: phoneZoom, resolution: Self.resolution))
     }
 
     /// Seconds until another network request is allowed, if throttled.
@@ -87,7 +105,7 @@ final class AppModel {
     var cacheDirectory: URL { cache.directory }
 
     private func loadCached() {
-        apply(pipeline.cachedSnapshot(zoom: zoom, resolution: Self.resolution))
+        apply(pipeline.cachedSnapshot(zoom: phoneZoom, resolution: Self.resolution))
     }
 
     private func apply(_ result: RadarSnapshot) {

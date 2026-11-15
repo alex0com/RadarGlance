@@ -133,13 +133,15 @@ struct RadarPipelineTests {
         #expect(renderer.calls == 2)
     }
 
-    @Test func reusedBaseMapUsesItsOwnBoxForRadar() async throws {
+    @Test func reusedBaseMapKeepsItsBoxAndRadarIsCenteredOnIt() async throws {
         _ = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
-        let firstBBox = try #require(cache.readDebug()?.bbox)
+        let first = try #require(cache.readDebug())
         clock.advance(60)
         location.set(.fix(LocationFix(latitude: 35.485, longitude: -97.52, timestamp: clock.now), stale: false))
         _ = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
-        #expect(cache.readDebug()?.bbox == firstBBox)
+        let second = try #require(cache.readDebug())
+        #expect(second.tileBBox == first.tileBBox)
+        #expect(second.bbox == first.bbox)
     }
 
     @Test func lowMemorySkipsBaseMap() async throws {
@@ -164,11 +166,58 @@ struct RadarPipelineTests {
         #expect(loader.mapRequestCount == 1)
     }
 
-    @Test func highResolutionRequests1024() async throws {
+    @Test func highResolutionComposite() async throws {
         let snapshot = await pipeline.refresh(force: false, zoom: .miles80, resolution: .high)
         #expect(snapshot.metadata?.resolution == .high)
         #expect(snapshot.imageURL?.lastPathComponent == "composite-80-1024.png")
-        #expect(loader.requests.last?.url?.query?.contains("WIDTH=1024&HEIGHT=1024") == true)
+    }
+
+    /// Every zoom is cut from one download, so the request doesn't depend on the zoom.
+    @Test func radarRequestCoversFootprintRegardlessOfZoom() async throws {
+        _ = await pipeline.refresh(force: false, zoom: .miles40, resolution: .standard)
+        let expected = MercatorBox(center: .init(latitude: 35.47, longitude: -97.52), widthMiles: RadarFootprint.miles)
+        let query = try #require(loader.requests.last?.url?.query)
+        #expect(query.contains("BBOX=\(expected.bboxString)"))
+        #expect(query.contains("WIDTH=1280&HEIGHT=1280"))
+    }
+
+    @Test func zoomChangeRecomposesWithoutNetwork() async throws {
+        let first = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
+        let requests = loader.requests.count
+        clock.advance(5)
+        for zoom in [ZoomLevel.miles40, .miles160] {
+            let snapshot = await pipeline.recompose(zoom: zoom, resolution: .standard)
+            #expect(snapshot.failure == nil)
+            #expect(snapshot.metadata?.zoom == zoom)
+            #expect(snapshot.metadata?.fetchTime == first.metadata?.fetchTime)
+            #expect(snapshot.imageURL?.lastPathComponent == "composite-\(zoom.rawValue)-512.png")
+        }
+        #expect(loader.requests.count == requests)
+        #expect(renderer.calls == 3)
+    }
+
+    @Test func throttledRefreshAtNewZoomIsCutFromLastDownload() async {
+        _ = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
+        clock.advance(5)
+        let snapshot = await pipeline.refresh(force: true, zoom: .miles40, resolution: .standard)
+        #expect(snapshot.throttled)
+        #expect(snapshot.metadata?.zoom == .miles40)
+        #expect(loader.mapRequestCount == 1)
+    }
+
+    @Test func recomposeWithoutAnyDownloadHasNoImage() async {
+        let snapshot = await pipeline.recompose(zoom: .miles40, resolution: .standard)
+        #expect(snapshot.imageURL == nil)
+        #expect(loader.requests.isEmpty)
+    }
+
+    /// Moving farther than the footprint margin means the cached radar can't cover the tile.
+    @Test func recomposeAfterMovingFarFallsBackToCachedComposite() async {
+        let first = await pipeline.refresh(force: false, zoom: .miles160, resolution: .standard)
+        location.set(.fix(LocationFix(latitude: 36.2, longitude: -97.52, timestamp: clock.now), stale: false))
+        let snapshot = await pipeline.recompose(zoom: .miles160, resolution: .standard)
+        #expect(snapshot.metadata == first.metadata)
+        #expect(cache.readDebug()?.outcome == "no cached radar covers this area")
     }
 
     @Test func lowMemoryDowngradesHighResolution() async throws {
@@ -178,16 +227,16 @@ struct RadarPipelineTests {
             availableMemory: { 16 * 1024 * 1024 })
         let snapshot = await tight.refresh(force: false, zoom: .miles80, resolution: .high)
         #expect(snapshot.metadata?.resolution == .standard)
-        #expect(loader.requests.last?.url?.query?.contains("WIDTH=512") == true)
+        #expect(snapshot.imageURL?.lastPathComponent == "composite-80-512.png")
         #expect(renderer.calls == 1)
     }
 
-    @Test func throttledHighResolutionFallsBackToStandardCache() async {
+    @Test func throttledHighResolutionIsCutFromLastDownload() async {
         _ = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
         clock.advance(5)
         let snapshot = await pipeline.refresh(force: false, zoom: .miles80, resolution: .high)
         #expect(snapshot.throttled)
-        #expect(snapshot.metadata?.resolution == .standard)
-        #expect(snapshot.imageURL != nil)
+        #expect(snapshot.metadata?.resolution == .high)
+        #expect(loader.mapRequestCount == 1)
     }
 }

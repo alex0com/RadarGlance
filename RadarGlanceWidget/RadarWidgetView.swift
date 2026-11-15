@@ -22,8 +22,8 @@ struct RadarWidgetView: View {
         .containerBackground(for: .widget) { Self.tileColor }
     }
 
-    /// Crossfades when a new composite arrives. Keyed by fetch time, so the extra entries
-    /// that only change the time label's tint don't fade.
+    /// Crossfades when new radar arrives or the zoom changes. The extra entries that only
+    /// change the time label's tint keep the same key, so they don't fade.
     @ViewBuilder
     private var radarImage: some View {
         if let image = shownImage {
@@ -34,9 +34,14 @@ struct RadarWidgetView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipped()
-                .id(entry.metadata?.fetchTime)
+                .id(imageKey)
                 .transition(.opacity)
         }
+    }
+
+    private var imageKey: String {
+        guard let metadata = entry.metadata else { return "none" }
+        return "\(metadata.fetchTime.timeIntervalSince1970)-\(metadata.zoom.rawValue)"
     }
 
     /// Hidden for failures where a cached image would be misleading.

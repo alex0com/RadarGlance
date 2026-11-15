@@ -68,6 +68,11 @@ public struct MercatorBox: Sendable, Equatable, Codable {
         CGPoint(x: (point.x - minX) / width * size, y: (point.y - minY) / width * size)
     }
 
+    /// Whether `other` lies entirely inside this box.
+    public func contains(_ other: MercatorBox) -> Bool {
+        other.minX >= minX && other.minY >= minY && other.maxX <= maxX && other.maxY <= maxY
+    }
+
     /// Whether `point` is within `fraction` of the box width from the box center, on both axes.
     public func isNearCenter(_ point: MKMapPoint, fraction: Double) -> Bool {
         let c = center

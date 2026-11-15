@@ -3,23 +3,25 @@ import Shared
 import WidgetKit
 
 enum ZoomOption: String, AppEnum {
-    case appSetting
+    case automatic
     case miles40
     case miles80
     case miles160
 
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "Zoom"
     static let caseDisplayRepresentations: [ZoomOption: DisplayRepresentation] = [
-        .appSetting: "Same as app",
+        .automatic: DisplayRepresentation(title: "Automatic",
+                                          subtitle: "Small: CarPlay zoom. Larger: iPhone zoom."),
         .miles40: "40 miles",
         .miles80: "80 miles",
         .miles160: "160 miles",
     ]
 
-    /// The tile width to use; "Same as app" reads the app's zoom picker.
-    func resolved(store: SharedStore) -> ZoomLevel {
+    /// Automatic uses the app's CarPlay zoom for small widgets (the only size CarPlay shows;
+    /// WidgetKit doesn't say whether a widget is in CarPlay) and the iPhone zoom otherwise.
+    func resolved(store: SharedStore, family: WidgetFamily) -> ZoomLevel {
         switch self {
-        case .appSetting: store.zoom
+        case .automatic: family == .systemSmall ? store.carZoom : store.phoneZoom
         case .miles40: .miles40
         case .miles80: .miles80
         case .miles160: .miles160
@@ -31,7 +33,7 @@ struct RadarConfigurationIntent: WidgetConfigurationIntent {
     static let title: LocalizedStringResource = "Radar"
     static let description = IntentDescription("Live weather radar around your location.")
 
-    @Parameter(title: "Zoom", default: .appSetting)
+    @Parameter(title: "Zoom", default: .automatic)
     var zoom: ZoomOption
 }
 

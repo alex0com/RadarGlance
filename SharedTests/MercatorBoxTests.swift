@@ -75,6 +75,24 @@ struct MercatorBoxTests {
         #expect(box.bboxString == "-20037508.343,-20037508.343,20037508.343,20037508.343")
     }
 
+    @Test func containsBox() {
+        let outer = MercatorBox(minX: 0, minY: 0, width: 100)
+        #expect(outer.contains(MercatorBox(minX: 10, minY: 10, width: 80)))
+        #expect(outer.contains(outer))
+        #expect(!outer.contains(MercatorBox(minX: 30, minY: 10, width: 80)))
+    }
+
+    /// A 40 mi tile centered in the 200 mi footprint: the radar image is 5× the tile.
+    @Test func radarRectForCenteredTile() {
+        let center = CLLocationCoordinate2D(latitude: 35.47, longitude: -97.52)
+        let radar = MercatorBox(center: center, widthMiles: 200)
+        let tile = MercatorBox(center: center, widthMiles: 40)
+        let rect = RadarCompositor.radarRect(radarBox: radar, tileBox: tile, size: 512)
+        #expect(abs(rect.width - 2560) < 1e-6)
+        #expect(abs(rect.minX - -1024) < 1e-6)
+        #expect(abs(rect.minY - -1024) < 1e-6)
+    }
+
     @Test func nearCenter() {
         let box = MercatorBox(minX: 0, minY: 0, width: 1000)
         #expect(box.isNearCenter(MKMapPoint(x: 550, y: 450), fraction: 0.1))

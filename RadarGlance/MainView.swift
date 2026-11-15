@@ -16,12 +16,11 @@ struct MainView: View {
                     }
                     radarImage
                     statusLine
-                    Picker("Zoom", selection: $model.zoom) {
-                        ForEach(ZoomLevel.allCases) { level in
-                            Text(level.label).tag(level)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    ZoomPicker(title: "iPhone", systemImage: "iphone", selection: $model.phoneZoom)
+                    ZoomPicker(title: "CarPlay", systemImage: "car", selection: $model.carZoom)
+                    Text("CarPlay zoom applies to small widgets, the only size CarPlay shows. To use a different zoom for a Home Screen widget, touch and hold it and choose Edit Widget.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
 
                     Button {
                         Task { await model.refresh(force: true) }
@@ -129,6 +128,25 @@ struct MainView: View {
     }
 }
 
+private struct ZoomPicker: View {
+    let title: String
+    let systemImage: String
+    @Binding var selection: ZoomLevel
+
+    var body: some View {
+        HStack {
+            Label(title, systemImage: systemImage)
+                .frame(width: 110, alignment: .leading)
+            Picker(title, selection: $selection) {
+                ForEach(ZoomLevel.allCases) { level in
+                    Text(level.label).tag(level)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+}
+
 private struct DebugPanel: View {
     @Environment(AppModel.self) private var model
 
@@ -141,7 +159,10 @@ private struct DebugPanel: View {
                 if let debug = model.debug {
                     row("Last run", "\(debug.process) · \(time(debug.attemptTime)) · forced \(debug.forced)")
                     row("Outcome", debug.outcome)
-                    row("BBOX", debug.bbox ?? "–")
+                    row("Zoom", debug.zoom.map { "\($0) mi" } ?? "–")
+                    row("Radar", debug.radarReused == true ? "cut from last download" : "downloaded")
+                    row("WMS BBOX (\(Int(RadarFootprint.miles)) mi)", debug.bbox ?? "–")
+                    row("Tile BBOX", debug.tileBBox ?? "–")
                     row("WMS URL", debug.wmsURL ?? "–")
                     row("HTTP status", debug.httpStatus.map(String.init) ?? "–")
                     row("Radar TIME", debug.radarTimeRaw ?? "–")

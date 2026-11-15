@@ -111,7 +111,20 @@ struct SharedStoreTests {
         #expect(store.claimNetworkSlot(now: t + 60, interval: 30) != nil)
     }
 
-    @Test func zoomDefaultsTo80() {
-        #expect(SharedStore(defaults: temporaryDefaults()).zoom == .miles80)
+    @Test func zoomDefaults() {
+        let store = SharedStore(defaults: temporaryDefaults())
+        #expect(store.phoneZoom == .miles40)
+        #expect(store.carZoom == .miles160)
+    }
+
+    @Test func radarFrameRoundTrip() throws {
+        let cache = RadarCache(directory: temporaryDirectory())
+        let png = try Fixture.data("radar-sample.png")
+        let frame = RadarFrame(box: MercatorBox(minX: 1, minY: 2, width: 3), radarTime: RadarTime(raw: "2026-11-15T01:28:11Z"),
+                               fetchTime: Date(timeIntervalSince1970: 1_800_000_000))
+        try cache.writeRadar(png, frame: frame)
+        let read = try #require(cache.readRadar())
+        #expect(read.frame == frame)
+        #expect(read.png == png)
     }
 }
