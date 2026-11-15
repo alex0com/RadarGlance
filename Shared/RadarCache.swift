@@ -10,15 +10,17 @@ public struct RadarMetadata: Codable, Sendable, Equatable {
     public var longitude: Double
     public var locationStale: Bool
     public var zoom: ZoomLevel
+    public var resolution: TileResolution
 
     public init(radarTime: Date?, fetchTime: Date, latitude: Double, longitude: Double,
-                locationStale: Bool, zoom: ZoomLevel) {
+                locationStale: Bool, zoom: ZoomLevel, resolution: TileResolution) {
         self.radarTime = radarTime
         self.fetchTime = fetchTime
         self.latitude = latitude
         self.longitude = longitude
         self.locationStale = locationStale
         self.zoom = zoom
+        self.resolution = resolution
     }
 
     /// The time shown on the widget and used for stale tinting.
@@ -54,6 +56,7 @@ public struct DebugRecord: Codable, Sendable, Equatable {
     public var wmsURL: String?
     public var httpStatus: Int?
     public var radarTimeRaw: String?
+    public var resolution: Int?
     public var baseMapReused: Bool?
     public var alignmentErrorPixels: Double?
     public var memory: [MemoryReading] = []
@@ -91,10 +94,18 @@ public struct RadarCache: Sendable {
         return RadarCache(directory: base.appending(path: "RadarCache", directoryHint: .isDirectory))
     }
 
-    public func compositeURL(zoom: ZoomLevel) -> URL { file("composite-\(zoom.rawValue).png") }
-    private func metadataURL(zoom: ZoomLevel) -> URL { file("metadata-\(zoom.rawValue).json") }
-    private func baseMapURL(zoom: ZoomLevel) -> URL { file("basemap-\(zoom.rawValue).png") }
-    private func baseMapInfoURL(zoom: ZoomLevel) -> URL { file("basemap-\(zoom.rawValue).json") }
+    public func compositeURL(zoom: ZoomLevel, resolution: TileResolution) -> URL {
+        file("composite-\(zoom.rawValue)-\(resolution.pixels).png")
+    }
+    private func metadataURL(zoom: ZoomLevel, resolution: TileResolution) -> URL {
+        file("metadata-\(zoom.rawValue)-\(resolution.pixels).json")
+    }
+    private func baseMapURL(zoom: ZoomLevel, resolution: TileResolution) -> URL {
+        file("basemap-\(zoom.rawValue)-\(resolution.pixels).png")
+    }
+    private func baseMapInfoURL(zoom: ZoomLevel, resolution: TileResolution) -> URL {
+        file("basemap-\(zoom.rawValue)-\(resolution.pixels).json")
+    }
     private var debugURL: URL { file("debug.json") }
 
     private func file(_ name: String) -> URL {
@@ -105,30 +116,37 @@ public struct RadarCache: Sendable {
 
     /// Writes the image first so the metadata never points at a missing image.
     public func writeComposite(_ png: Data, metadata: RadarMetadata) throws {
-        try png.write(to: compositeURL(zoom: metadata.zoom), options: Self.writeOptions)
-        try write(metadata, to: metadataURL(zoom: metadata.zoom))
+        try png.write(to: compositeURL(zoom: metadata.zoom, resolution: metadata.resolution), options: Self.writeOptions)
+        try write(metadata, to: metadataURL(zoom: metadata.zoom, resolution: metadata.resolution))
     }
 
-    public func readMetadata(zoom: ZoomLevel) -> RadarMetadata? {
-        guard FileManager.default.fileExists(atPath: compositeURL(zoom: zoom).path) else { return nil }
-        return read(RadarMetadata.self, from: metadataURL(zoom: zoom))
+    public func readMetadata(zoom: ZoomLevel, resolution: TileResolution) -> RadarMetadata? {
+        guard FileManager.default.fileExists(atPath: compositeURL(zoom: zoom, resolution: resolution).path)
+        else { return nil }
+        return read(RadarMetadata.self, from: metadataURL(zoom: zoom, resolution: resolution))
     }
 
-    /// The most recently fetched composite at any zoom.
-    public func latestMetadata() -> RadarMetadata? {
-        ZoomLevel.allCases.compactMap(readMetadata(zoom:)).max { $0.fetchTime < $1.fetchTime }
+    /// The best cached composite for a widget: same zoom and resolution, else the newest at
+    /// the same zoom, else the newest of all.
+    public func bestMetadata(zoom: ZoomLevel, resolution: TileResolution) -> RadarMetadata? {
+        if let exact = readMetadata(zoom: zoom, resolution: resolution) { return exact }
+        let all = ZoomLevel.allCases.flatMap { z in
+            TileResolution.allCases.compactMap { readMetadata(zoom: z, resolution: $0) }
+        }
+        let newest = { (list: [RadarMetadata]) in list.max { $0.fetchTime < $1.fetchTime } }
+        return newest(all.filter { $0.zoom == zoom }) ?? newest(all)
     }
 
     // MARK: Base map
 
-    public func writeBaseMap(_ png: Data, info: BaseMapInfo, zoom: ZoomLevel) throws {
-        try png.write(to: baseMapURL(zoom: zoom), options: Self.writeOptions)
-        try write(info, to: baseMapInfoURL(zoom: zoom))
+    public func writeBaseMap(_ png: Data, info: BaseMapInfo, zoom: ZoomLevel, resolution: TileResolution) throws {
+        try png.write(to: baseMapURL(zoom: zoom, resolution: resolution), options: Self.writeOptions)
+        try write(info, to: baseMapInfoURL(zoom: zoom, resolution: resolution))
     }
 
-    public func readBaseMap(zoom: ZoomLevel) -> (png: Data, info: BaseMapInfo)? {
-        guard let info = read(BaseMapInfo.self, from: baseMapInfoURL(zoom: zoom)),
-              let png = try? Data(contentsOf: baseMapURL(zoom: zoom))
+    public func readBaseMap(zoom: ZoomLevel, resolution: TileResolution) -> (png: Data, info: BaseMapInfo)? {
+        guard let info = read(BaseMapInfo.self, from: baseMapInfoURL(zoom: zoom, resolution: resolution)),
+              let png = try? Data(contentsOf: baseMapURL(zoom: zoom, resolution: resolution))
         else { return nil }
         return (png, info)
     }

@@ -25,6 +25,15 @@ public enum ZoomLevel: Int, CaseIterable, Codable, Sendable, Identifiable {
     public var label: String { "\(rawValue) mi" }
 }
 
+/// Pixel size of the square composite. The small (CarPlay) widget uses `.standard` to stay
+/// well inside the widget memory limit; medium and large widgets use `.high`.
+public enum TileResolution: Int, CaseIterable, Codable, Sendable {
+    case standard = 512
+    case high = 1024
+
+    public var pixels: Int { rawValue }
+}
+
 /// A position fix, as stored in the App Group and drawn by the compositor.
 public struct LocationFix: Codable, Sendable, Equatable {
     public var latitude: Double
@@ -39,6 +48,10 @@ public struct LocationFix: Codable, Sendable, Equatable {
         self.course = course
         self.timestamp = timestamp
     }
+}
+
+public struct NetworkSlot: Sendable {
+    fileprivate let previous: Date?
 }
 
 /// Settings and cross-process state shared by the app and the widget through the App Group.
@@ -98,6 +111,27 @@ public final class SharedStore: @unchecked Sendable {
     public var onboardingDone: Bool {
         get { defaults.bool(forKey: Key.onboardingDone) }
         set { defaults.set(newValue, forKey: Key.onboardingDone) }
+    }
+
+    /// Serializes claims within a process: several widgets can refresh at the same time.
+    private static let networkSlotLock = NSLock()
+
+    /// Atomically records a network attempt at `now` unless the last one was under `interval`
+    /// ago. Returns nil when throttled; otherwise a token for `releaseNetworkSlot` in case
+    /// the attempt turns out not to need the network.
+    public func claimNetworkSlot(now: Date, interval: TimeInterval) -> NetworkSlot? {
+        Self.networkSlotLock.withLock {
+            let previous = lastNetworkAttempt
+            if let previous, previous <= now, now.timeIntervalSince(previous) < interval {
+                return nil
+            }
+            lastNetworkAttempt = now
+            return NetworkSlot(previous: previous)
+        }
+    }
+
+    public func releaseNetworkSlot(_ slot: NetworkSlot) {
+        Self.networkSlotLock.withLock { lastNetworkAttempt = slot.previous }
     }
 
     /// True if the refresh button was tapped after the last time a forced refresh was handled.

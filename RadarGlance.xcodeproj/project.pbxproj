@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		0578E86CDFB58E52DE9B28C1 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E87082F820DC7D0511F41 /* AppModel.swift */; };
+		07286E4EC05E014D7E4F23BA /* WidgetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7E714B32677F54441E0BA3 /* WidgetImage.swift */; };
 		0EA81497D35BF899CFB082CA /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B84A0F01B9E4FCF7BF437EB8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		157F79C6ABEA280A51BB6884 /* RadarClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31396C14313FBBDAB520DAB2 /* RadarClientTests.swift */; };
 		2E949CC837405171B14982C0 /* BaseMapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6FA86EED23B428F50143EB5 /* BaseMapRenderer.swift */; };
 		319A9AAE568139DE481F8E40 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D333F197CF043E387A6A3B /* LocationService.swift */; };
 		3BD8C50DD0181D5A9F20F3C4 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6A1BBDDBAC138201228DF /* SharedStore.swift */; };
 		3F04B967014EF1B7E23E1311 /* RadarCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E481E950B0629BAE55C0C5 /* RadarCompositor.swift */; };
+		4028AA376AC7BE15ED7A8197 /* ScaleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6483454D61E29BE4FCEDC4 /* ScaleBar.swift */; };
 		409A5D554ED433CAD102538D /* radar-sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 77791F7A859C6A8F7DE1483E /* radar-sample.png */; };
 		4673D3D98BCB22FE02095FBB /* CarPlayHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9B5B1DACAE18283274A11D /* CarPlayHelpView.swift */; };
 		5ACD1A61EF16777493F14F53 /* RadarGlanceWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2B96978421C5CE2805A1B811 /* RadarGlanceWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -32,6 +34,7 @@
 		9EA6F84AB73CB60E606224E7 /* RadarTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920DE8E91C11B8FABE538610 /* RadarTimelineProvider.swift */; };
 		AB191561E91F7BE421BF6303 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B84A0F01B9E4FCF7BF437EB8 /* Shared.framework */; };
 		AC61289D531F9E73B07345A3 /* RadarGlanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02704010B4F225226FE6485F /* RadarGlanceApp.swift */; };
+		BD421105128FA875D8FCEBAC /* WidgetImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A387542F44EE58BA62D822 /* WidgetImageTests.swift */; };
 		C733011FC97ABB4643E6D55B /* service-exception.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6CD4084D90125F4CC148F9BA /* service-exception.xml */; };
 		CB0BA4A6C5DFA2C7BDE346AB /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B84A0F01B9E4FCF7BF437EB8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7CBA5B84D5D13BF2CC52077 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555A24760E4DAF5917F12F13 /* OnboardingView.swift */; };
@@ -122,6 +125,7 @@
 		5B66DBF0E29C47CF4C077DA2 /* RadarPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPipelineTests.swift; sourceTree = "<group>"; };
 		5B9FC7CF6BB68FF661E14AE7 /* MercatorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercatorBox.swift; sourceTree = "<group>"; };
 		6CD4084D90125F4CC148F9BA /* service-exception.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "service-exception.xml"; sourceTree = "<group>"; };
+		6D7E714B32677F54441E0BA3 /* WidgetImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetImage.swift; sourceTree = "<group>"; };
 		70F448FEF838FFCA3539EFD6 /* RadarGlance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RadarGlance.entitlements; sourceTree = "<group>"; };
 		74AFA04B50EB68CAC4593F39 /* RadarCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCache.swift; sourceTree = "<group>"; };
 		77791F7A859C6A8F7DE1483E /* radar-sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radar-sample.png"; sourceTree = "<group>"; };
@@ -136,6 +140,8 @@
 		BEA6A1BBDDBAC138201228DF /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
 		C1D333F197CF043E387A6A3B /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		CB60E676DB1AC618F901B05D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CD6483454D61E29BE4FCEDC4 /* ScaleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleBar.swift; sourceTree = "<group>"; };
+		D3A387542F44EE58BA62D822 /* WidgetImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetImageTests.swift; sourceTree = "<group>"; };
 		D5E481E950B0629BAE55C0C5 /* RadarCompositor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCompositor.swift; sourceTree = "<group>"; };
 		D6FA86EED23B428F50143EB5 /* BaseMapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMapRenderer.swift; sourceTree = "<group>"; };
 		D83C1F28720AE6E728D60B48 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
@@ -202,7 +208,9 @@
 				D5E481E950B0629BAE55C0C5 /* RadarCompositor.swift */,
 				3E6FA60DD26907AF2928024E /* RadarPipeline.swift */,
 				E69546CDB2704A9FA9AA1B6D /* RadarRegion.swift */,
+				CD6483454D61E29BE4FCEDC4 /* ScaleBar.swift */,
 				BEA6A1BBDDBAC138201228DF /* SharedStore.swift */,
+				6D7E714B32677F54441E0BA3 /* WidgetImage.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -262,6 +270,7 @@
 				31396C14313FBBDAB520DAB2 /* RadarClientTests.swift */,
 				5B66DBF0E29C47CF4C077DA2 /* RadarPipelineTests.swift */,
 				D83C1F28720AE6E728D60B48 /* TestSupport.swift */,
+				D3A387542F44EE58BA62D822 /* WidgetImageTests.swift */,
 				5DFA2FAB465F007654069646 /* Fixtures */,
 			);
 			path = SharedTests;
@@ -430,6 +439,7 @@
 				157F79C6ABEA280A51BB6884 /* RadarClientTests.swift in Sources */,
 				7CE2C847E6D5014E4C26F1BE /* RadarPipelineTests.swift in Sources */,
 				6A3F8E17AFCC4B1DB91182A3 /* TestSupport.swift in Sources */,
+				BD421105128FA875D8FCEBAC /* WidgetImageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,7 +468,9 @@
 				3F04B967014EF1B7E23E1311 /* RadarCompositor.swift in Sources */,
 				60D10910BFA29F5F40ABBD17 /* RadarPipeline.swift in Sources */,
 				78C4B16E45DB57F743DE1C46 /* RadarRegion.swift in Sources */,
+				4028AA376AC7BE15ED7A8197 /* ScaleBar.swift in Sources */,
 				3BD8C50DD0181D5A9F20F3C4 /* SharedStore.swift in Sources */,
+				07286E4EC05E014D7E4F23BA /* WidgetImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

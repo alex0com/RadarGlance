@@ -62,6 +62,15 @@ struct MainView: View {
                     .resizable()
                     .interpolation(.medium)
                     .aspectRatio(contentMode: .fit)
+                    .overlay(alignment: .bottomTrailing) {
+                        if let zoom = model.snapshot?.metadata?.zoom {
+                            GeometryReader { geometry in
+                                ScaleBar(zoom: zoom, tileSide: geometry.size.width)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                                    .padding(10)
+                            }
+                        }
+                    }
             } else if let failure = model.snapshot?.failure {
                 Text(failure.message).foregroundStyle(.white)
             } else if model.isRefreshing {

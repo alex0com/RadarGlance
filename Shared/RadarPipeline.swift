@@ -56,6 +56,8 @@ public actor RadarPipeline {
     public static let baseMapMaxAge: TimeInterval = 7 * 24 * 3600
     /// Below this much headroom, skip the map snapshot and draw on a plain tile.
     public static let lowMemoryBytes = 8 * 1024 * 1024
+    /// Below this much headroom, a 1024 px request is rendered at 512 px instead.
+    public static let highResolutionMemoryBytes = 24 * 1024 * 1024
 
     private let client: RadarClient
     private let location: LocationProviding
@@ -87,41 +89,55 @@ public actor RadarPipeline {
     }
 
     /// The last cached image, without touching the network or location.
-    public nonisolated func cachedSnapshot(zoom: ZoomLevel) -> RadarSnapshot {
-        snapshotFromCache(zoom: zoom, failure: nil, throttled: false)
+    public nonisolated func cachedSnapshot(zoom: ZoomLevel, resolution: TileResolution) -> RadarSnapshot {
+        snapshotFromCache(zoom: zoom, resolution: resolution, failure: nil, throttled: false)
     }
 
-    public func refresh(force: Bool, zoom: ZoomLevel) async -> RadarSnapshot {
+    public func refresh(force: Bool, zoom: ZoomLevel, resolution requestedResolution: TileResolution) async -> RadarSnapshot {
         let start = now()
         var debug = DebugRecord(process: processName, attemptTime: start, forced: force, outcome: "")
         defer { cache.writeDebug(debug) }
+        let fromCache = { (failure: RadarFailure?, throttled: Bool) in
+            self.snapshotFromCache(zoom: zoom, resolution: requestedResolution, failure: failure, throttled: throttled)
+        }
 
-        if let last = store.lastNetworkAttempt, start.timeIntervalSince(last) < Self.minimumInterval, last <= start {
-            debug.outcome = "throttled (last attempt \(Int(start.timeIntervalSince(last))) s ago)"
-            return snapshotFromCache(zoom: zoom, failure: nil, throttled: true)
+        // Claimed before the first suspension so concurrent refreshes (several widgets) can't
+        // both pass the check.
+        guard let slot = store.claimNetworkSlot(now: start, interval: Self.minimumInterval) else {
+            debug.outcome = "throttled"
+            return fromCache(nil, true)
         }
 
         let fix: LocationFix
         let locationStale: Bool
         switch await location.currentLocation() {
         case .denied:
+            store.releaseNetworkSlot(slot)
             debug.outcome = "location off"
-            return snapshotFromCache(zoom: zoom, failure: .locationOff, throttled: false)
+            return fromCache(.locationOff, false)
         case .unavailable:
+            store.releaseNetworkSlot(slot)
             debug.outcome = "no location"
-            return snapshotFromCache(zoom: zoom, failure: .locationUnavailable, throttled: false)
+            return fromCache(.locationUnavailable, false)
         case let .fix(value, stale):
             fix = value
             locationStale = stale
         }
 
         guard let region = RadarRegion.region(latitude: fix.latitude, longitude: fix.longitude) else {
+            store.releaseNetworkSlot(slot)
             debug.outcome = "no coverage at \(fix.latitude), \(fix.longitude)"
-            return snapshotFromCache(zoom: zoom, failure: .noCoverage, throttled: false)
+            return fromCache(.noCoverage, false)
         }
 
-        store.lastNetworkAttempt = start
         recordMemory("start", into: &debug)
+        var resolution = requestedResolution
+        let available = availableMemory()
+        if resolution == .high, available > 0, available < Self.highResolutionMemoryBytes {
+            resolution = .standard
+            recordMemory("low memory: 1024 px → 512 px", into: &debug)
+        }
+        debug.resolution = resolution.pixels
 
         // Reuse the cached base map if the user hasn't moved far; the radar is then fetched
         // for the base map's box so the two still line up.
@@ -129,7 +145,7 @@ public actor RadarPipeline {
         var box = MercatorBox(center: CLLocationCoordinate2D(latitude: fix.latitude, longitude: fix.longitude),
                               widthMiles: zoom.miles)
         var baseMapPNG: Data?
-        if let cached = cache.readBaseMap(zoom: zoom),
+        if let cached = cache.readBaseMap(zoom: zoom, resolution: resolution),
            cached.info.box.isNearCenter(userPoint, fraction: Self.baseMapReuseFraction),
            start.timeIntervalSince(cached.info.createdAt) < Self.baseMapMaxAge {
             box = cached.info.box
@@ -147,14 +163,14 @@ public actor RadarPipeline {
             radarTime = nil
             if Self.isOffline(error) {
                 debug.outcome = "offline: \(error.localizedDescription)"
-                return snapshotFromCache(zoom: zoom, failure: .network, throttled: false)
+                return fromCache(.network, false)
             }
         }
         debug.radarTimeRaw = radarTime?.raw
 
         let radar: RadarImage
         do {
-            radar = try await client.fetchImage(region: region, box: box, time: radarTime)
+            radar = try await client.fetchImage(region: region, box: box, time: radarTime, size: resolution.pixels)
             debug.wmsURL = radar.url.absoluteString
             debug.httpStatus = radar.httpStatus
             recordMemory("radar downloaded", into: &debug)
@@ -162,7 +178,7 @@ public actor RadarPipeline {
             debug.wmsURL = await client.lastRequestURL?.absoluteString
             debug.httpStatus = await client.lastHTTPStatus
             debug.outcome = "radar failed: \(Self.describe(error))"
-            return snapshotFromCache(zoom: zoom, failure: Self.isOffline(error) ? .network : .service, throttled: false)
+            return fromCache(Self.isOffline(error) ? .network : .service, false)
         }
 
         if baseMapPNG == nil {
@@ -172,12 +188,13 @@ public actor RadarPipeline {
                 recordMemory("skipped base map (low memory)", into: &debug)
             } else {
                 do {
-                    let base = try await renderer.render(box: box, size: RadarClient.imageSize)
+                    let base = try await renderer.render(box: box, size: resolution.pixels)
                     baseMapPNG = base.png
                     debug.baseMapReused = false
                     debug.alignmentErrorPixels = base.alignmentErrorPixels
                     try? cache.writeBaseMap(base.png, info: BaseMapInfo(
-                        box: box, createdAt: start, alignmentErrorPixels: base.alignmentErrorPixels), zoom: zoom)
+                        box: box, createdAt: start, alignmentErrorPixels: base.alignmentErrorPixels),
+                        zoom: zoom, resolution: resolution)
                     recordMemory("base map rendered", into: &debug)
                 } catch {
                     // Radar on a plain dark tile is still useful.
@@ -188,31 +205,32 @@ public actor RadarPipeline {
 
         let png = RadarCompositor.compose(.init(
             baseMapPNG: baseMapPNG, radarPNG: radar.png, box: box,
-            user: fix, userIsStale: locationStale, zoom: zoom))
+            user: fix, userIsStale: locationStale, size: resolution.pixels))
         recordMemory("composited", into: &debug)
 
         let metadata = RadarMetadata(
             radarTime: radarTime?.date, fetchTime: start,
             latitude: fix.latitude, longitude: fix.longitude,
-            locationStale: locationStale, zoom: zoom)
+            locationStale: locationStale, zoom: zoom, resolution: resolution)
         do {
             try cache.writeComposite(png, metadata: metadata)
         } catch {
             debug.outcome = "cache write failed: \(error.localizedDescription)"
-            return snapshotFromCache(zoom: zoom, failure: .service, throttled: false)
+            return fromCache(.service, false)
         }
         store.lastSuccessfulRefresh = start
         debug.outcome = radarTime == nil ? "fetched (no TIME; label uses fetch time)" : "fetched"
-        return RadarSnapshot(imageURL: cache.compositeURL(zoom: zoom), metadata: metadata,
+        return RadarSnapshot(imageURL: cache.compositeURL(zoom: zoom, resolution: resolution), metadata: metadata,
                              failure: nil, throttled: false)
     }
 
     // MARK: Helpers
 
-    /// The composite for `zoom`, else the newest at any zoom, else no image.
-    private nonisolated func snapshotFromCache(zoom: ZoomLevel, failure: RadarFailure?, throttled: Bool) -> RadarSnapshot {
-        let metadata = cache.readMetadata(zoom: zoom) ?? cache.latestMetadata()
-        return RadarSnapshot(imageURL: metadata.map { cache.compositeURL(zoom: $0.zoom) },
+    /// See `RadarCache.bestMetadata` for which cached composite is chosen.
+    private nonisolated func snapshotFromCache(zoom: ZoomLevel, resolution: TileResolution,
+                                               failure: RadarFailure?, throttled: Bool) -> RadarSnapshot {
+        let metadata = cache.bestMetadata(zoom: zoom, resolution: resolution)
+        return RadarSnapshot(imageURL: metadata.map { cache.compositeURL(zoom: $0.zoom, resolution: $0.resolution) },
                              metadata: metadata, failure: failure, throttled: throttled)
     }
 

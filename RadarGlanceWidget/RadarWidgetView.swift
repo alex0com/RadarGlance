@@ -9,21 +9,33 @@ struct RadarWidgetView: View {
     private static let tileColor = Color(red: 0.07, green: 0.08, blue: 0.10)
 
     var body: some View {
-        content
-            // The tile stays dark in both appearances so the radar has contrast.
-            .environment(\.colorScheme, .dark)
-            .containerBackground(for: .widget) { background }
+        GeometryReader { geometry in
+            ZStack {
+                radarImage
+                content(tileSide: max(geometry.size.width, geometry.size.height))
+            }
+        }
+        // The tile stays dark in both appearances so the radar has contrast.
+        .environment(\.colorScheme, .dark)
+        // The image lives in the content rather than the container background so that
+        // WidgetKit animates it between entries. The background stays non-removable.
+        .containerBackground(for: .widget) { Self.tileColor }
     }
 
+    /// Crossfades when a new composite arrives. Keyed by fetch time, so the extra entries
+    /// that only change the time label's tint don't fade.
     @ViewBuilder
-    private var background: some View {
+    private var radarImage: some View {
         if let image = shownImage {
             Image(uiImage: image)
                 .resizable()
                 .interpolation(.medium)
+                .widgetAccentedRenderingMode(.fullColor)
                 .aspectRatio(contentMode: .fill)
-        } else {
-            Self.tileColor
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipped()
+                .id(entry.metadata?.fetchTime)
+                .transition(.opacity)
         }
     }
 
@@ -34,7 +46,7 @@ struct RadarWidgetView: View {
     }
 
     @ViewBuilder
-    private var content: some View {
+    private func content(tileSide: CGFloat) -> some View {
         if entry.isPlaceholder {
             Text("Radar")
                 .font(.headline)
@@ -43,28 +55,31 @@ struct RadarWidgetView: View {
                 .background(Color.gray.opacity(0.35))
         } else if shownImage == nil {
             messageTile(entry.failure?.message ?? "No radar yet")
+                .transition(.opacity)
         } else {
-            radarOverlay
+            radarOverlay(tileSide: tileSide)
         }
     }
 
-    private var radarOverlay: some View {
-        ZStack {
-            VStack {
-                HStack {
-                    Spacer()
-                    refreshButton
+    private func radarOverlay(tileSide: CGFloat) -> some View {
+        VStack {
+            HStack {
+                Spacer()
+                refreshButton
+            }
+            Spacer()
+            HStack(alignment: .bottom) {
+                if let time = entry.metadata?.displayTime {
+                    TimeLabel(time: time, now: entry.date)
                 }
                 Spacer()
-                HStack {
-                    if let time = entry.metadata?.displayTime {
-                        TimeLabel(time: time, now: entry.date)
-                    }
-                    Spacer()
+                if let zoom = entry.metadata?.zoom {
+                    ScaleBar(zoom: zoom, tileSide: tileSide)
+                        .padding(.bottom, 2)
                 }
             }
-            .padding(8)
         }
+        .padding(8)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityText)
     }
@@ -108,6 +123,7 @@ private struct TimeLabel: View {
         let age = RadarAge(dataTime: time, now: now)
         HStack(spacing: 3) {
             Text(time, format: .dateTime.hour().minute())
+                .contentTransition(.numericText(value: time.timeIntervalSince1970))
             if age == .old {
                 Text("Old")
             }

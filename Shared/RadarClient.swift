@@ -126,8 +126,9 @@ public actor RadarClient {
 
     /// Downloads one GetMap PNG. Pass the time from `latestRadarTime`; never a made-up time,
     /// because out-of-range times return a blank PNG rather than an error.
-    public func fetchImage(region: RadarRegion, box: MercatorBox, time: RadarTime?) async throws -> RadarImage {
-        let url = Self.getMapURL(region: region, box: box, time: time)
+    public func fetchImage(region: RadarRegion, box: MercatorBox, time: RadarTime?,
+                           size: Int = imageSize) async throws -> RadarImage {
+        let url = Self.getMapURL(region: region, box: box, time: time, size: size)
         let (data, status) = try await load(url)
         try Self.validatePNG(data, httpStatus: status)
         return RadarImage(png: data, url: url, httpStatus: status)

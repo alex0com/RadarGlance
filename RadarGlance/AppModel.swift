@@ -23,6 +23,9 @@ final class AppModel {
         }
     }
 
+    /// The app shows what the small (CarPlay) widget gets.
+    static let resolution = TileResolution.standard
+
     /// Set with `-testLocation lat,lon`; replaces GPS for Simulator testing.
     let testLocation = FixedLocationProvider.fromLaunchArguments()
 
@@ -66,7 +69,7 @@ final class AppModel {
         guard !isRefreshing else { return }
         isRefreshing = true
         defer { isRefreshing = false }
-        let result = await pipeline.refresh(force: force, zoom: zoom)
+        let result = await pipeline.refresh(force: force, zoom: zoom, resolution: Self.resolution)
         apply(result)
         // The widget re-reads the cache; its own refresh is throttled, so this costs no request.
         WidgetCenter.shared.reloadAllTimelines()
@@ -84,7 +87,7 @@ final class AppModel {
     var cacheDirectory: URL { cache.directory }
 
     private func loadCached() {
-        apply(pipeline.cachedSnapshot(zoom: zoom))
+        apply(pipeline.cachedSnapshot(zoom: zoom, resolution: Self.resolution))
     }
 
     private func apply(_ result: RadarSnapshot) {

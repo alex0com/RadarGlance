@@ -18,7 +18,8 @@ struct RadarWidget: Widget {
         }
         .configurationDisplayName("Radar")
         .description("Live NOAA weather radar centered on you.")
-        .supportedFamilies([.systemSmall])
+        // CarPlay only shows the small size; medium and large are for the iPhone.
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
         .contentMarginsDisabled()
         // CarPlay hides removable backgrounds, which would hide the radar.
         .containerBackgroundRemovable(false)
