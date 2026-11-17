@@ -19,13 +19,13 @@ and humidity come from the National Weather Service API. No accounts or API keys
 
 ## Screenshots
 
-### The widget in StandBy
+### The widget
 
-Captured on an iPhone 17 Pro Max with `xcrun devicectl device capture screenshot`. The widget
-shows the radar around you, the radar's time, a scale bar, the refresh button, and (optional)
-temperature and humidity from the nearest NWS station.
-
-<img src="docs/screenshots/standby.png" width="700" alt="iPhone in StandBy: clock on the left, Radar Glance widget on the right showing radar, 55° and 88% humidity">
+The small widget (Home Screen, StandBy, and CarPlay) shows the radar around you, the radar's
+time, a scale bar, the refresh button, and (optional) temperature and humidity from the nearest
+NWS station. In StandBy it sits next to the clock on its dark tile. To capture StandBy or
+CarPlay from a connected iPhone, see [CarPlay](#carplay) below; the same `devicectl` commands
+work for the iPhone's own screen.
 
 ### The app
 
@@ -54,10 +54,18 @@ xcrun devicectl device capture screenshot --device <device-udid> \
   version with CarPlay widgets.
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`). `project.yml` is the
   source of truth; the generated `RadarGlance.xcodeproj` is committed too.
-- An Apple developer team for running on a device. The project uses team `XXXXXXXXXX` with
-  automatic signing; to build under another team, change `DEVELOPMENT_TEAM` and
-  `bundleIdPrefix` in `project.yml` (and the App Group `group.<prefix>.radarglance` in
-  `project.yml` and `Shared/SharedStore.swift`), then run `xcodegen generate`.
+- An Apple developer team for running on a device (Simulator builds need none). Signing comes
+  from `Config/Signing.xcconfig`, which defaults to bundle prefix `com.example` and no team.
+  Put your own values in `Config/Local.xcconfig` (git-ignored):
+
+  ```
+  DEVELOPMENT_TEAM = ABCDE12345
+  BUNDLE_ID_PREFIX = com.yourname
+  ```
+
+  The app becomes `<prefix>.radarglance`, the widget `<prefix>.radarglance.widget`, and the
+  shared App Group `group.<prefix>.radarglance` (read at runtime from each Info.plist's
+  `AppGroupIdentifier`). Automatic signing registers them on the first device build.
 
 ## Build and test
 
@@ -79,7 +87,7 @@ device, and press Run (⌘R); ⌘U runs the tests.
 xcrun simctl boot "iPhone 17 Pro"
 xcodebuild -scheme RadarGlance -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 xcrun simctl install "iPhone 17 Pro" ~/Library/Developer/Xcode/DerivedData/RadarGlance-*/Build/Products/Debug-iphonesimulator/RadarGlance.app
-xcrun simctl launch "iPhone 17 Pro" com.example.radarglance -testLocation 28.12,-82.6
+xcrun simctl launch "iPhone 17 Pro" com.example.radarglance -testLocation 28.12,-82.6   # <prefix>.radarglance
 ```
 
 Launch arguments (Debug builds):

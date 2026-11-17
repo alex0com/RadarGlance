@@ -1,7 +1,10 @@
 import Foundation
 
 public enum AppGroup {
-    public static let identifier = "group.com.example.radarglance"
+    /// `group.$(BUNDLE_ID_PREFIX).radarglance`, from the app's or widget's Info.plist (see
+    /// Config/Signing.xcconfig).
+    public static let identifier = Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
+        ?? "group.com.example.radarglance"
 
     public static var containerURL: URL? {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
