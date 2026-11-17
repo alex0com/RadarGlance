@@ -155,15 +155,13 @@ Turn on temperature and humidity in the app: Settings → Widget → Temperature
 | Base map | Apple MapKit |
 | Highway lines | US Census TIGER/Line primary roads (public domain) |
 
-Design notes are in `PLAN.md`; NOAA service details, the radar color table, and the backup are in
-`docs/noaa-wms-notes.md`.
 
 ## Generated data
 
 - `RadarGlance/Resources/highways.bin`: highway lines from US Census TIGER/Line primary roads.
   Regenerate with the commands at the top of `tools/build-highways.py`.
 - `Shared/RadarPaletteTable.swift`: NOAA radar color → dBZ, measured against nowCOAST. See
-  `tools/derive-radar-palette.py` and `docs/noaa-wms-notes.md`.
+  `tools/derive-radar-palette.py` for the method.
 
 ## Manual checks (can't be automated here)
 

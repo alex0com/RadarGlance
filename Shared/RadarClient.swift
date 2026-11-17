@@ -51,7 +51,8 @@ public enum RadarClientError: Error, Sendable, Equatable {
     case noTimeInCapabilities
 }
 
-/// Talks to the NOAA MRMS WMS. See docs/noaa-wms-notes.md for the service's quirks.
+/// Talks to the NOAA MRMS WMS. Quirks: errors come back as XML with HTTP 200, and a TIME that
+/// isn't listed in GetCapabilities returns a blank PNG rather than an error.
 public actor RadarClient {
     public static let userAgent = "RadarGlance/1.0 (iOS widget; contact: radarglance@example.com)"
     public static let requestTimeout: TimeInterval = 15

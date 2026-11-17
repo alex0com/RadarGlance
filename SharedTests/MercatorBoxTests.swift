@@ -36,7 +36,7 @@ struct MercatorBoxTests {
         #expect(abs(back.y - point.y) < 1e-6)
     }
 
-    /// Compared with the recon request (docs/noaa-wms-notes.md), computed independently with
+    /// Compared with a recorded NOAA GetMap request, computed independently with
     /// spherical Web Mercator formulas. The center must match exactly. The width differs by
     /// ~0.34% because `MKMapPointsPerMeterAtLatitude` uses the polar Earth radius where the
     /// recon script used the equatorial one; that only changes the scale, not alignment.

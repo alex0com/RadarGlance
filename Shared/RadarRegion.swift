@@ -1,6 +1,6 @@
 import Foundation
 
-/// A NOAA MRMS WMS coverage area. Values come from GetCapabilities; see docs/noaa-wms-notes.md.
+/// A NOAA MRMS WMS coverage area. Values come from the layer's GetCapabilities.
 public struct RadarRegion: Sendable, Equatable {
     public let id: String
     public let endpoint: URL

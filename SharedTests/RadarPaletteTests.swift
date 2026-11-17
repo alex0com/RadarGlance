@@ -17,7 +17,7 @@ struct RadarPaletteTests {
         #expect(Set(keys).count == keys.count)
     }
 
-    /// Well-sampled colors from the nowCOAST comparison (docs/noaa-wms-notes.md).
+    /// Well-sampled colors from the nowCOAST comparison (tools/derive-radar-palette.py).
     @Test(arguments: [
         (UInt8(67), UInt8(94), UInt8(159), 10.5),  // deep blue
         (94, 173, 207, 15.5),                       // cyan

@@ -1,7 +1,7 @@
 import Foundation
 
 /// A NOAA service that serves the MRMS radar mosaic. Both carry the same data; they differ in
-/// colors and update rate (opengeo ~2 min, nowCOAST ~4 min). See docs/noaa-wms-notes.md.
+/// colors and update rate (opengeo ~2 min, nowCOAST ~4 min).
 public enum RadarSource: String, Codable, Sendable, CaseIterable {
     /// opengeo.ncep.noaa.gov, the primary source (same colors as radar.weather.gov).
     case opengeo
