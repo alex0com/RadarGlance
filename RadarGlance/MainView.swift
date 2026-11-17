@@ -45,6 +45,9 @@ struct MainView: View {
         }
         .onAppear {
             centerOnUser(animated: false)
+            #if DEBUG
+            applyScreenshotArguments()
+            #endif
         }
         .onChange(of: mapSettings.settings, initial: true) { _, settings in
             loop.rendering = RadarRendering(colorScheme: settings.colorScheme,
@@ -78,6 +81,19 @@ struct MainView: View {
             }
         }
     }
+
+    #if DEBUG
+    /// For README screenshots: `-mapWidthMiles 2500` starts wider than the zoom settings allow,
+    /// `-showSettings` opens Settings on launch.
+    private func applyScreenshotArguments() {
+        let defaults = UserDefaults.standard
+        if let coordinate = model.lastKnownCoordinate, defaults.double(forKey: "mapWidthMiles") > 0 {
+            centerRequest = CenterRequest(coordinate: coordinate, widthMiles: defaults.double(forKey: "mapWidthMiles"),
+                                          animated: false)
+        }
+        showingSettings = defaults.bool(forKey: "showSettings")
+    }
+    #endif
 
     private func centerOnUser(animated: Bool) {
         guard let coordinate = model.lastKnownCoordinate else { return }

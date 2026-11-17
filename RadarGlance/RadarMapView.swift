@@ -78,6 +78,7 @@ struct RadarMapView: UIViewRepresentable {
         private var highwayOverlays: [HighwayOverlay] = []
         private var highwayLoad: Task<Void, Never>?
         private var wantsHighways = false
+        private var highwayDetail = HighwayOverlay.Detail.full
         private var pinAnnotation: MKPointAnnotation?
         private var settleTask: Task<Void, Never>?
 
@@ -159,6 +160,21 @@ struct RadarMapView: UIViewRepresentable {
             }
         }
 
+        /// Thinner highway lines as the map zooms out, so they don't bury the radar.
+        private func updateHighwayDetail(on map: MKMapView) {
+            let area = Self.visibleArea(of: map)
+            let miles = area.width * MKMetersPerMapPointAtLatitude(MKMapPoint(x: area.midX, y: area.midY).coordinate.latitude)
+                / MercatorBox.metersPerMile
+            let detail = HighwayOverlay.Detail(visibleMiles: miles)
+            guard detail != highwayDetail else { return }
+            highwayDetail = detail
+            for overlay in highwayOverlays {
+                guard let renderer = map.renderer(for: overlay) as? MKMultiPolylineRenderer else { continue }
+                overlay.style(renderer, detail: detail)
+                renderer.setNeedsDisplay()
+            }
+        }
+
         func updatePin(_ coordinate: CLLocationCoordinate2D?, on map: MKMapView) {
             guard let coordinate else {
                 if let pinAnnotation { map.removeAnnotation(pinAnnotation) }
@@ -196,7 +212,7 @@ struct RadarMapView: UIViewRepresentable {
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let highway = overlay as? HighwayOverlay {
-                return highway.makeRenderer()
+                return highway.makeRenderer(detail: highwayDetail)
             }
             guard let overlay = overlay as? RadarOverlay else { return MKOverlayRenderer(overlay: overlay) }
             let renderer = RadarOverlayRenderer(overlay: overlay)
@@ -213,6 +229,7 @@ struct RadarMapView: UIViewRepresentable {
         }
 
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            updateHighwayDetail(on: mapView)
             settleTask?.cancel()
             settleTask = Task { [weak self, weak mapView] in
                 try? await Task.sleep(for: RadarMapView.settleDelay)
@@ -290,21 +307,50 @@ final class HighwayOverlay: MKMultiPolyline, @unchecked Sendable {
         super.init(polylines)
     }
 
-    func makeRenderer() -> MKOverlayRenderer {
+    /// How much highway to draw at the current zoom.
+    enum Detail {
+        /// Interstates and freeways, full width.
+        case full
+        /// Interstates only, thinner.
+        case interstates
+        /// Interstates as faint hairlines (most of the country on screen).
+        case overview
+
+        init(visibleMiles: Double) {
+            switch visibleMiles {
+            case ..<300: self = .full
+            case ..<1_000: self = .interstates
+            default: self = .overview
+            }
+        }
+    }
+
+    func makeRenderer(detail: Detail) -> MKMultiPolylineRenderer {
         let renderer = MKMultiPolylineRenderer(multiPolyline: self)
-        let width: CGFloat = highwayClass == .interstate ? 2.5 : 1.5
+        renderer.lineCap = .round
+        renderer.lineJoin = .round
+        style(renderer, detail: detail)
+        return renderer
+    }
+
+    func style(_ renderer: MKMultiPolylineRenderer, detail: Detail) {
+        let interstate = highwayClass == .interstate
+        let width: CGFloat
+        switch detail {
+        case .full: width = interstate ? 2.5 : 1.5
+        case .interstates: width = interstate ? 1.5 : 0
+        case .overview: width = interstate ? 0.75 : 0
+        }
         switch layer {
         case .casing:
             renderer.strokeColor = UIColor.black.withAlphaComponent(0.5)
             renderer.lineWidth = width + 2
+            renderer.alpha = width > 0 && detail != .overview ? 1 : 0
         case .line:
-            renderer.strokeColor = highwayClass == .interstate
-                ? UIColor.white.withAlphaComponent(0.95) : UIColor(white: 0.88, alpha: 0.85)
+            renderer.strokeColor = interstate ? UIColor.white.withAlphaComponent(0.95) : UIColor(white: 0.88, alpha: 0.85)
             renderer.lineWidth = width
+            renderer.alpha = width == 0 ? 0 : detail == .overview ? 0.6 : 1
         }
-        renderer.lineCap = .round
-        renderer.lineJoin = .round
-        return renderer
     }
 
     /// Casings under lines, interstates over freeways. Empty if the resource is missing.
