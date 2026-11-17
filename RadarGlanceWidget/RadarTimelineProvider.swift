@@ -8,6 +8,8 @@ struct RadarEntry: TimelineEntry {
     let metadata: RadarMetadata?
     let failure: RadarFailure?
     let isPlaceholder: Bool
+    /// Temperature and humidity, when the setting is on and NWS had data.
+    var conditions: WeatherConditions?
 
     static func placeholder(date: Date = Date()) -> RadarEntry {
         RadarEntry(date: date, image: nil, metadata: nil, failure: nil, isPlaceholder: true)
@@ -25,7 +27,12 @@ struct RadarTimelineProvider: AppIntentTimelineProvider {
         let zoom = configuration.zoom.resolved(store: SharedStore(), family: context.family)
         let snapshot = await MainActor.run { makePipeline() }
             .cachedSnapshot(zoom: zoom, resolution: Self.resolution(for: context.family))
-        return entry(from: snapshot, date: Date(), context: context) ?? .placeholder()
+        guard var entry = entry(from: snapshot, date: Date(), context: context) else { return .placeholder() }
+        let store = SharedStore()
+        if store.showsWidgetWeather, let cached = store.weatherConditions, !cached.isStale(now: Date()) {
+            entry.conditions = cached
+        }
+        return entry
     }
 
     func timeline(for configuration: RadarConfigurationIntent, in context: Context) async -> Timeline<RadarEntry> {
@@ -36,7 +43,11 @@ struct RadarTimelineProvider: AppIntentTimelineProvider {
         let snapshot = await pipeline.refresh(force: force, zoom: configuration.zoom.resolved(store: store, family: context.family),
                                               resolution: Self.resolution(for: context.family))
 
-        let current = entry(from: snapshot, date: now, context: context) ?? .placeholder(date: now)
+        var current = entry(from: snapshot, date: now, context: context) ?? .placeholder(date: now)
+        if store.showsWidgetWeather, let metadata = snapshot.metadata {
+            current.conditions = await WeatherService(store: store)
+                .conditions(latitude: metadata.latitude, longitude: metadata.longitude, force: force)
+        }
         // Extra entries with the same image so the time label turns amber/red on schedule
         // even if the system delays the next reload.
         var entries = [current]
@@ -45,7 +56,8 @@ struct RadarTimelineProvider: AppIntentTimelineProvider {
                 let date = time.addingTimeInterval(threshold)
                 if date > now {
                     entries.append(RadarEntry(date: date, image: current.image, metadata: current.metadata,
-                                              failure: current.failure, isPlaceholder: false))
+                                              failure: current.failure, isPlaceholder: false,
+                                              conditions: current.conditions))
                 }
             }
         }

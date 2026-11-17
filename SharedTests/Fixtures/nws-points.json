@@ -1,0 +1,10 @@
+{
+ "properties": {
+  "observationStations": "https://api.weather.gov/gridpoints/OUN/97,94/stations",
+  "forecastHourly": "https://api.weather.gov/gridpoints/OUN/97,94/forecast/hourly",
+  "gridId": "OUN",
+  "gridX": 97,
+  "gridY": 94,
+  "timeZone": "America/Chicago"
+ }
+}

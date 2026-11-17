@@ -1,0 +1,22 @@
+{
+ "features": [
+  {
+   "properties": {
+    "stationIdentifier": "KOKC",
+    "name": "Oklahoma City, Will Rogers World Airport"
+   }
+  },
+  {
+   "properties": {
+    "stationIdentifier": "KPWA",
+    "name": "Oklahoma City, Wiley Post Airport"
+   }
+  },
+  {
+   "properties": {
+    "stationIdentifier": "KTIK",
+    "name": "Tinker Air Force Base"
+   }
+  }
+ ]
+}

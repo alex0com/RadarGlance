@@ -1,5 +1,6 @@
 import CoreLocation
 import Foundation
+import MapKit
 import Testing
 @testable import Shared
 
@@ -14,6 +15,23 @@ struct RadarClientTests {
             + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=conus_bref_qcd&STYLES="
             + "&CRS=EPSG:3857&BBOX=-20037508.343,-20037508.343,20037508.343,20037508.343"
             + "&WIDTH=512&HEIGHT=512&FORMAT=image/png&TRANSPARENT=true&TIME=2026-11-15T01:28:11Z")
+    }
+
+    @Test func nonSquareGetMapURL() throws {
+        let time = try #require(RadarTime(raw: "2026-11-15T01:28:11Z"))
+        let rect = MKMapRect(x: okcBox.minX, y: okcBox.minY, width: okcBox.width, height: okcBox.width * 2)
+        let url = RadarClient.getMapURL(region: .conus, mapRect: rect, width: 300, height: 600, time: time)
+        let query = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems)
+        func value(_ name: String) -> String? { query.first { $0.name == name }?.value }
+        #expect(value("WIDTH") == "300")
+        #expect(value("HEIGHT") == "600")
+        #expect(value("BBOX") == MercatorBox.bboxString(for: rect))
+        #expect(value("TIME") == "2026-11-15T01:28:11Z")
+        // Same west, north and east edges as the square box; the south edge is one box further down.
+        let square = okcBox.bboxMeters
+        let tall = MercatorBox.bboxMeters(for: rect)
+        #expect(tall.minX == square.minX && tall.maxX == square.maxX && tall.maxY == square.maxY)
+        #expect(tall.minY < square.minY)
     }
 
     @Test func getMapURLWithoutTime() {

@@ -24,12 +24,14 @@ final class TestClock: @unchecked Sendable {
     func advance(_ seconds: TimeInterval) { lock.withLock { value += seconds } }
 }
 
-/// Answers GetCapabilities with the recon fixture and GetMap with `mapResponse`.
+/// Answers GetCapabilities with the recon fixture and GetMap with `mapResponse`. Requests to
+/// nowCOAST get its own capabilities fixture, and `nowCoastMapResponse` if set.
 final class MockLoader: HTTPDataLoading, @unchecked Sendable {
     private let lock = NSLock()
     private var _requests: [URLRequest] = []
     private var _mapResponse: Result<(Data, Int), Error>
     private var _capabilitiesResponse: Result<(Data, Int), Error>
+    private var _nowCoastMapResponse: Result<(Data, Int), Error>?
 
     init(mapResponse: Result<(Data, Int), Error>, capabilitiesResponse: Result<(Data, Int), Error>) {
         _mapResponse = mapResponse
@@ -43,15 +45,26 @@ final class MockLoader: HTTPDataLoading, @unchecked Sendable {
 
     var requests: [URLRequest] { lock.withLock { _requests } }
     var mapRequestCount: Int { requests.filter { $0.url!.query!.contains("REQUEST=GetMap") }.count }
+    var nowCoastRequestCount: Int { requests.filter { Self.isNowCoast($0) }.count }
     var capabilitiesRequestCount: Int { requests.filter { $0.url!.query!.contains("REQUEST=GetCapabilities") }.count }
 
     func setMapResponse(_ response: Result<(Data, Int), Error>) { lock.withLock { _mapResponse = response } }
     func setCapabilitiesResponse(_ response: Result<(Data, Int), Error>) { lock.withLock { _capabilitiesResponse = response } }
+    func setNowCoastMapResponse(_ response: Result<(Data, Int), Error>) { lock.withLock { _nowCoastMapResponse = response } }
+
+    private static func isNowCoast(_ request: URLRequest) -> Bool {
+        request.url!.host()!.contains("nowcoast")
+    }
 
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+        let isMap = request.url!.query!.contains("REQUEST=GetMap")
+        let nowCoastCapabilities = Result { (try Fixture.data("nowcoast-capabilities.xml"), 200) }
         let result: Result<(Data, Int), Error> = lock.withLock {
             _requests.append(request)
-            return request.url!.query!.contains("REQUEST=GetMap") ? _mapResponse : _capabilitiesResponse
+            if Self.isNowCoast(request) {
+                return isMap ? (_nowCoastMapResponse ?? _mapResponse) : nowCoastCapabilities
+            }
+            return isMap ? _mapResponse : _capabilitiesResponse
         }
         let (data, status) = try result.get()
         let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)!

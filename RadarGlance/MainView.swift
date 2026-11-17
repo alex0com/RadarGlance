@@ -1,50 +1,76 @@
+import CoreLocation
 import Shared
 import SwiftUI
 
+/// Full-screen animated radar map. Opened by launching the app or tapping the widget.
 struct MainView: View {
+    /// The widget opens the app with this URL.
+    static let radarURL = URL(string: "radarglance://radar")!
+
     @Environment(AppModel.self) private var model
+    @Environment(RadarLoopModel.self) private var loop
+    @Environment(MapSettingsModel.self) private var mapSettings
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
+    @State private var showingSettings = false
+    @State private var centerRequest: CenterRequest?
+    @State private var playbackBarHeight: CGFloat = 0
 
     var body: some View {
-        @Bindable var model = model
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    if model.locationDenied {
-                        locationBanner
-                    }
-                    radarImage
-                    statusLine
-                    ZoomPicker(title: "iPhone", systemImage: "iphone", selection: $model.phoneZoom)
-                    ZoomPicker(title: "CarPlay", systemImage: "car", selection: $model.carZoom)
-                    Text("CarPlay zoom applies to small widgets, the only size CarPlay shows. To use a different zoom for a Home Screen widget, touch and hold it and choose Edit Widget.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-
-                    Button {
-                        Task { await model.refresh(force: true) }
-                    } label: {
-                        Label(model.isRefreshing ? "Refreshing…" : "Refresh", systemImage: "arrow.clockwise")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(model.isRefreshing)
-
-                    NavigationLink {
-                        CarPlayHelpView()
-                    } label: {
-                        Label("How to add it to CarPlay", systemImage: "car")
-                    }
-
-                    DebugPanel()
-                }
-                .padding()
+        RadarMapView(
+            frameSet: loop.frameSet,
+            frameIndex: loop.currentIndex,
+            settings: mapSettings.settings,
+            showsUserLocation: model.testLocation == nil && model.isLocationAuthorized,
+            pin: model.testLocation.map { CLLocationCoordinate2D(latitude: $0.fix.latitude, longitude: $0.fix.longitude) },
+            center: centerRequest,
+            bottomInset: playbackBarHeight,
+            onSettle: { loop.mapSettled(visible: $0, viewPixels: $1) }
+        )
+        .ignoresSafeArea()
+        .overlay(alignment: .topTrailing) { mapButtons }
+        .overlay(alignment: .top) {
+            if model.locationDenied {
+                locationBanner.padding(.horizontal).padding(.trailing, 56)
             }
-            .navigationTitle("Radar Glance")
+        }
+        .safeAreaInset(edge: .bottom) {
+            PlaybackBar()
+                .padding(.horizontal)
+                .padding(.bottom, 4)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { playbackBarHeight = $0 }
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+        }
+        .onAppear {
+            centerOnUser(animated: false)
+        }
+        .onChange(of: mapSettings.settings, initial: true) { _, settings in
+            loop.rendering = RadarRendering(colorScheme: settings.colorScheme,
+                                            hidesLightReturns: settings.hidesLightReturns)
+            loop.animationSpeed = settings.animationSpeed
+            loop.sourcePreference = settings.radarSource
+        }
+        .onChange(of: model.lastKnownCoordinate?.latitude) {
+            // First launch: no position until the first fix arrives.
+            if centerRequest == nil { centerOnUser(animated: true) }
+        }
+        .onOpenURL { url in
+            guard url == Self.radarURL else { return }
+            showingSettings = false
+            centerOnUser(animated: true)
         }
         .task {
             await model.refresh(force: false)
+        }
+        .task(id: scenePhase) {
+            // While the app is open, pick up each new NOAA frame.
+            guard scenePhase == .active else { return }
+            while !Task.isCancelled {
+                loop.refresh()
+                try? await Task.sleep(for: RadarLoopModel.refreshInterval)
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -53,64 +79,47 @@ struct MainView: View {
         }
     }
 
-    private var radarImage: some View {
-        ZStack {
-            Color(white: 0.08)
-            if let image = model.image, model.snapshot?.failure?.hidesImage != true {
-                Image(uiImage: image)
-                    .resizable()
-                    .interpolation(.medium)
-                    .aspectRatio(contentMode: .fit)
-                    .overlay(alignment: .bottomTrailing) {
-                        if let zoom = model.snapshot?.metadata?.zoom {
-                            GeometryReader { geometry in
-                                ScaleBar(zoom: zoom, tileSide: geometry.size.width)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                                    .padding(10)
-                            }
-                        }
-                    }
-            } else if let failure = model.snapshot?.failure {
-                Text(failure.message).foregroundStyle(.white)
-            } else if model.isRefreshing {
-                ProgressView().tint(.white)
-            } else {
-                Text("No radar yet").foregroundStyle(.white)
-            }
-        }
-        .aspectRatio(1, contentMode: .fit)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .accessibilityLabel(accessibilityText)
+    private func centerOnUser(animated: Bool) {
+        guard let coordinate = model.lastKnownCoordinate else { return }
+        centerRequest = CenterRequest(coordinate: coordinate, widthMiles: model.phoneZoom.miles, animated: animated)
     }
 
-    @ViewBuilder
-    private var statusLine: some View {
-        HStack {
-            if let metadata = model.snapshot?.metadata {
-                let age = RadarAge(dataTime: metadata.displayTime, now: Date())
-                Text("Radar \(metadata.displayTime.formatted(date: .omitted, time: .shortened))")
-                    .foregroundStyle(age == .fresh ? Color.primary : age == .aging ? Color.orange : Color.red)
-                if metadata.radarTime == nil {
-                    Text("(fetch time)").foregroundStyle(.secondary)
-                }
-                if metadata.locationStale {
-                    Text("· last known location").foregroundStyle(.secondary)
-                }
+    private var mapButtons: some View {
+        VStack(spacing: 10) {
+            mapButton("Settings", systemImage: "gearshape") { showingSettings = true }
+            mapButton("Refresh radar", systemImage: "arrow.clockwise", isBusy: loop.isLoading || model.isRefreshing) {
+                loop.refresh(force: true)
+                Task { await model.refresh(force: true) }
             }
-            Spacer()
-            if let failure = model.snapshot?.failure, !failure.hidesImage {
-                Text(failure.message).foregroundStyle(.orange)
-            } else if let wait = model.throttleRemaining {
-                Text("Wait \(wait) s").foregroundStyle(.secondary)
+            if model.lastKnownCoordinate != nil {
+                mapButton("Center on my location", systemImage: "location") { centerOnUser(animated: true) }
             }
         }
-        .font(.subheadline.monospacedDigit())
+        .padding(.trailing)
+    }
+
+    private func mapButton(_ title: String, systemImage: String, isBusy: Bool = false,
+                           action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Group {
+                if isBusy {
+                    ProgressView()
+                } else {
+                    Image(systemName: systemImage)
+                        .font(.system(size: 17, weight: .semibold))
+                }
+            }
+            .frame(width: 44, height: 44)
+        }
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .accessibilityLabel(title)
     }
 
     private var locationBanner: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Location is off for Radar Glance").font(.headline)
-            Text("The radar and the CarPlay widget need While Using or Always.")
+            Text("The CarPlay widget needs While Using or Always.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Button("Open Settings") {
@@ -119,85 +128,94 @@ struct MainView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.orange.opacity(0.15), in: RoundedRectangle(cornerRadius: 12))
-    }
-
-    private var accessibilityText: String {
-        guard let time = model.snapshot?.metadata?.displayTime else { return "Weather radar" }
-        return "Weather radar, updated \(time.formatted(date: .omitted, time: .shortened))"
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
     }
 }
 
-private struct ZoomPicker: View {
-    let title: String
-    let systemImage: String
-    @Binding var selection: ZoomLevel
+/// Play/pause, a scrubber across the frames, and the shown frame's time.
+private struct PlaybackBar: View {
+    @Environment(RadarLoopModel.self) private var loop
 
     var body: some View {
-        HStack {
-            Label(title, systemImage: systemImage)
-                .frame(width: 110, alignment: .leading)
-            Picker(title, selection: $selection) {
-                ForEach(ZoomLevel.allCases) { level in
-                    Text(level.label).tag(level)
-                }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-}
-
-private struct DebugPanel: View {
-    @Environment(AppModel.self) private var model
-
-    var body: some View {
-        DisclosureGroup("Debug") {
-            VStack(alignment: .leading, spacing: 6) {
-                if let location = model.testLocation {
-                    row("Test location", "\(location.fix.latitude), \(location.fix.longitude)")
-                }
-                if let debug = model.debug {
-                    row("Last run", "\(debug.process) · \(time(debug.attemptTime)) · forced \(debug.forced)")
-                    row("Outcome", debug.outcome)
-                    row("Zoom", debug.zoom.map { "\($0) mi" } ?? "–")
-                    row("Radar", debug.radarReused == true ? "cut from last download" : "downloaded")
-                    row("WMS BBOX (\(Int(RadarFootprint.miles)) mi)", debug.bbox ?? "–")
-                    row("Tile BBOX", debug.tileBBox ?? "–")
-                    row("WMS URL", debug.wmsURL ?? "–")
-                    row("HTTP status", debug.httpStatus.map(String.init) ?? "–")
-                    row("Radar TIME", debug.radarTimeRaw ?? "–")
-                    row("Base map", debug.baseMapReused.map { $0 ? "reused" : "rendered" } ?? "–")
-                    row("Alignment", debug.alignmentErrorPixels.map { String(format: "%.2f px", $0) } ?? "–")
-                    ForEach(Array(debug.memory.enumerated()), id: \.offset) { _, reading in
-                        row("Memory", String(format: "%@: %.1f MB free", reading.step, reading.availableMB))
+        VStack(spacing: 6) {
+            if let frames = loop.frameSet?.frames, let frame = loop.currentFrame {
+                HStack(spacing: 12) {
+                    Button {
+                        loop.togglePlaying()
+                    } label: {
+                        Image(systemName: loop.isPlaying ? "pause.fill" : "play.fill")
+                            .font(.title3)
+                            .frame(width: 36, height: 36)
+                            .contentShape(Rectangle())
                     }
-                } else {
-                    row("Last run", "none")
+                    .accessibilityLabel(loop.isPlaying ? "Pause" : "Play")
+                    .disabled(frames.count < 2)
+
+                    if frames.count > 1 {
+                        Slider(value: scrubber(count: frames.count), in: 0...Double(frames.count - 1), step: 1)
+                            .accessibilityLabel("Radar time")
+                            .accessibilityValue(frame.time.date.formatted(date: .omitted, time: .shortened))
+                    } else {
+                        Spacer()
+                    }
+
+                    FrameTime(time: frame.time.date, isNewest: loop.currentIndex == frames.count - 1)
                 }
-                if let metadata = model.snapshot?.metadata {
-                    row("Radar time", metadata.radarTime.map(time) ?? "unknown")
-                    row("Fetch time", time(metadata.fetchTime))
-                    row("Position", String(format: "%.4f, %.4f%@", metadata.latitude, metadata.longitude,
-                                           metadata.locationStale ? " (stale)" : ""))
+            } else {
+                HStack {
+                    if let failure = loop.failure {
+                        Text(failure.message)
+                    } else {
+                        ProgressView()
+                        Text("Loading radar…")
+                    }
                 }
-                row("Last attempt", model.lastNetworkAttempt.map(time) ?? "–")
-                row("Last success", model.lastSuccessfulRefresh.map(time) ?? "–")
-                row("Cache", model.cacheDirectory.path)
+                .frame(maxWidth: .infinity, minHeight: 36)
             }
-            .font(.caption.monospaced())
-            .textSelection(.enabled)
-            .padding(.top, 8)
+            if loop.sourcePreference == .automatic, loop.activeSource == .nowCOAST {
+                Label("opengeo is unavailable; showing the nowCOAST backup", systemImage: "arrow.triangle.branch")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if loop.isLoading && loop.frameSet != nil {
+                ProgressView(value: loop.loadProgress)
+                    .progressViewStyle(.linear)
+            } else if let failure = loop.failure, loop.frameSet != nil {
+                Text(failure.message).font(.caption).foregroundStyle(.orange)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 24))
+    }
+
+    private func scrubber(count: Int) -> Binding<Double> {
+        Binding(
+            get: { Double(loop.currentIndex) },
+            set: { loop.select(index: Int($0.rounded())) }
+        )
+    }
+}
+
+private struct FrameTime: View {
+    let time: Date
+    let isNewest: Bool
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 30)) { context in
+            let age = RadarAge(dataTime: time, now: context.date)
+            Text(time, format: .dateTime.hour().minute())
+                .font(.subheadline.weight(isNewest ? .bold : .regular).monospacedDigit())
+                .foregroundStyle(isNewest ? color(for: age) : .secondary)
+                .frame(minWidth: 64, alignment: .trailing)
         }
     }
 
-    private func row(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 1) {
-            Text(label).foregroundStyle(.secondary)
-            Text(value)
+    private func color(for age: RadarAge) -> Color {
+        switch age {
+        case .fresh: .primary
+        case .aging: .orange
+        case .old: .red
         }
-    }
-
-    private func time(_ date: Date) -> String {
-        date.formatted(.dateTime.hour().minute().second())
     }
 }

@@ -50,16 +50,22 @@ public struct MercatorBox: Sendable, Equatable, Codable {
                    y: (halfExtent - y) / (2 * halfExtent) * worldWidth)
     }
 
-    /// minX, minY, maxX, maxY in EPSG:3857 meters. Map-point maxY is the southern edge,
-    /// so it becomes the meters minY.
+    /// minX, minY, maxX, maxY in EPSG:3857 meters.
     public var bboxMeters: (minX: Double, minY: Double, maxX: Double, maxY: Double) {
-        let southWest = Self.toMeters(MKMapPoint(x: minX, y: maxY))
-        let northEast = Self.toMeters(MKMapPoint(x: maxX, y: minY))
+        Self.bboxMeters(for: mapRect)
+    }
+
+    public var bboxString: String { Self.bboxString(for: mapRect) }
+
+    /// Map-point maxY is the southern edge, so it becomes the meters minY.
+    public static func bboxMeters(for rect: MKMapRect) -> (minX: Double, minY: Double, maxX: Double, maxY: Double) {
+        let southWest = toMeters(MKMapPoint(x: rect.minX, y: rect.maxY))
+        let northEast = toMeters(MKMapPoint(x: rect.maxX, y: rect.minY))
         return (southWest.x, southWest.y, northEast.x, northEast.y)
     }
 
-    public var bboxString: String {
-        let b = bboxMeters
+    public static func bboxString(for rect: MKMapRect) -> String {
+        let b = bboxMeters(for: rect)
         return String(format: "%.3f,%.3f,%.3f,%.3f", b.minX, b.minY, b.maxX, b.maxY)
     }
 

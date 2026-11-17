@@ -247,9 +247,32 @@ public actor RadarPipeline {
                              failure: failure, throttled: throttled)
     }
 
+    /// Downloads from each source the settings allow, in order, until one works. Being offline
+    /// ends the attempt; any other failure moves on to the next source (the backup).
+    private func download(region: RadarRegion, around center: MKMapPoint, force: Bool,
+                          debug: inout DebugRecord) async -> Result<(png: Data, frame: RadarFrame), RadarFailure> {
+        var result: Result<(png: Data, frame: RadarFrame), RadarFailure> = .failure(.service)
+        var failures: [String] = []
+        for source in store.mapSettings.radarSource.sources {
+            debug.source = source.rawValue
+            result = await download(from: source.region(for: region), around: center, force: force, debug: &debug)
+            switch result {
+            case .success:
+                if !failures.isEmpty { debug.outcome = "fell back: \(failures.joined(separator: "; "))" }
+                return result
+            case .failure(.network):
+                return result
+            case .failure:
+                failures.append("\(source.rawValue) \(debug.outcome)")
+            }
+        }
+        if failures.count > 1 { debug.outcome = failures.joined(separator: "; ") }
+        return result
+    }
+
     /// One GetCapabilities (unless cached) + one GetMap covering `RadarFootprint` around
     /// `center`. Saves the result as the shared radar frame.
-    private func download(region: RadarRegion, around center: MKMapPoint, force: Bool,
+    private func download(from region: RadarRegion, around center: MKMapPoint, force: Bool,
                           debug: inout DebugRecord) async -> Result<(png: Data, frame: RadarFrame), RadarFailure> {
         let start = now()
         let radarBox = MercatorBox(center: center.coordinate, widthMiles: RadarFootprint.miles)
@@ -303,7 +326,7 @@ public actor RadarPipeline {
         debug.memory.append(MemoryReading(step: step, availableMB: Double(availableMemory()) / 1_048_576))
     }
 
-    static func isOffline(_ error: Error) -> Bool {
+    public static func isOffline(_ error: Error) -> Bool {
         guard let urlError = error as? URLError else { return false }
         switch urlError.code {
         case .notConnectedToInternet, .networkConnectionLost, .timedOut, .cannotFindHost,

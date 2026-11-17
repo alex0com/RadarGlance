@@ -239,4 +239,46 @@ struct RadarPipelineTests {
         #expect(snapshot.metadata?.resolution == .high)
         #expect(loader.mapRequestCount == 1)
     }
+
+    // MARK: Backup source
+
+    @Test func fallsBackToNowCoastWhenOpengeoFails() async throws {
+        loader.setMapResponse(.success((Data("<html>503</html>".utf8), 503)))
+        loader.setNowCoastMapResponse(.success((try Fixture.data("radar-sample.png"), 200)))
+        let snapshot = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
+        #expect(snapshot.failure == nil)
+        // nowCOAST's own newest frame, from its capabilities.
+        #expect(snapshot.metadata?.radarTime == RadarTime(raw: "2026-11-17T16:16:11Z")?.date)
+        #expect(loader.requests.last?.url?.host() == "nowcoast.noaa.gov")
+        let debug = try #require(cache.readDebug())
+        #expect(debug.source == "nowCOAST")
+        #expect(debug.outcome.hasPrefix("fell back: opengeo"))
+    }
+
+    @Test func opengeoOnlyNeverUsesBackup() async {
+        var settings = MapSettings()
+        settings.radarSource = .opengeo
+        store.mapSettings = settings
+        loader.setMapResponse(.success((Data("<html>503</html>".utf8), 503)))
+        let snapshot = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
+        #expect(snapshot.failure == .service)
+        #expect(loader.nowCoastRequestCount == 0)
+    }
+
+    @Test func nowCoastOnlySkipsOpengeo() async throws {
+        var settings = MapSettings()
+        settings.radarSource = .nowCOAST
+        store.mapSettings = settings
+        let snapshot = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
+        #expect(snapshot.failure == nil)
+        #expect(loader.requests.allSatisfy { $0.url?.host() == "nowcoast.noaa.gov" })
+    }
+
+    @Test func offlineDoesNotTryBackup() async {
+        loader.setCapabilitiesResponse(.failure(URLError(.notConnectedToInternet)))
+        loader.setMapResponse(.failure(URLError(.notConnectedToInternet)))
+        let snapshot = await pipeline.refresh(force: false, zoom: .miles80, resolution: .standard)
+        #expect(snapshot.failure == .network)
+        #expect(loader.nowCoastRequestCount == 0)
+    }
 }

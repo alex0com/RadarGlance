@@ -15,8 +15,8 @@ final class AppModel {
     var onboardingDone: Bool {
         didSet { store.onboardingDone = onboardingDone }
     }
-    /// What the app shows, and medium/large widgets set to Automatic. Changing it cuts the
-    /// new zoom from the last radar download; no NOAA request.
+    /// The widget preview in Settings, the map's starting width, and medium/large widgets
+    /// set to Automatic. Changing it cuts the new zoom from the last radar download; no NOAA request.
     var phoneZoom: ZoomLevel {
         didSet {
             guard phoneZoom != oldValue else { return }
@@ -25,6 +25,18 @@ final class AppModel {
             WidgetCenter.shared.reloadAllTimelines()
         }
     }
+
+    /// Temperature and humidity on the widget (fetched by the widget from NWS).
+    var showsWidgetWeather: Bool {
+        didSet {
+            guard showsWidgetWeather != oldValue else { return }
+            store.showsWidgetWeather = showsWidgetWeather
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+    }
+
+    /// The conditions the widget last fetched, for the debug panel.
+    var widgetWeather: WeatherConditions? { store.weatherConditions }
 
     /// Small widgets set to Automatic (CarPlay shows only the small size).
     var carZoom: ZoomLevel {
@@ -52,13 +64,14 @@ final class AppModel {
         authorization = locationService.authorizationStatus
         phoneZoom = store.phoneZoom
         carZoom = store.carZoom
+        showsWidgetWeather = store.showsWidgetWeather
         onboardingDone = store.onboardingDone
         pipeline = RadarPipeline.live(location: testLocation ?? locationService, processName: "app")
         locationService.onAuthorizationChange = { [weak self] status in
             guard let self else { return }
             let changed = status != self.authorization
             self.authorization = status
-            if changed, status == .authorizedWhenInUse || status == .authorizedAlways {
+            if changed, self.isLocationAuthorized {
                 Task { await self.refresh(force: true) }
             }
         }
@@ -67,6 +80,10 @@ final class AppModel {
 
     var needsOnboarding: Bool {
         testLocation == nil && !onboardingDone && authorization == .notDetermined
+    }
+
+    var isLocationAuthorized: Bool {
+        authorization == .authorizedWhenInUse || authorization == .authorizedAlways
     }
 
     var locationDenied: Bool {
@@ -98,6 +115,15 @@ final class AppModel {
         guard snapshot?.throttled == true, let last = store.lastNetworkAttempt else { return nil }
         let remaining = Int(RadarPipeline.minimumInterval - Date().timeIntervalSince(last))
         return remaining > 0 ? remaining : nil
+    }
+
+    /// Where to center the radar map: the test location, else the last fix the radar used.
+    var lastKnownCoordinate: CLLocationCoordinate2D? {
+        if let fix = testLocation?.fix ?? store.cachedLocation {
+            return CLLocationCoordinate2D(latitude: fix.latitude, longitude: fix.longitude)
+        }
+        guard let metadata = snapshot?.metadata else { return nil }
+        return CLLocationCoordinate2D(latitude: metadata.latitude, longitude: metadata.longitude)
     }
 
     var lastNetworkAttempt: Date? { store.lastNetworkAttempt }

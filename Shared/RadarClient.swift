@@ -1,4 +1,5 @@
 import Foundation
+import MapKit
 
 public protocol HTTPDataLoading: Sendable {
     func data(for request: URLRequest) async throws -> (Data, URLResponse)
@@ -60,7 +61,8 @@ public actor RadarClient {
 
     private let loader: HTTPDataLoading
     private let now: @Sendable () -> Date
-    private var cachedTime: (time: RadarTime, fetchedAt: Date, regionID: String)?
+    /// Per region, so switching between sources doesn't refetch both.
+    private var cachedTimes: [String: (times: CapabilitiesTimes, fetchedAt: Date)] = [:]
 
     /// The last URL requested, for the debug panel.
     public private(set) var lastRequestURL: URL?
@@ -84,6 +86,16 @@ public actor RadarClient {
     }
 
     public static func getMapURL(region: RadarRegion, box: MercatorBox, time: RadarTime?, size: Int = imageSize) -> URL {
+        getMapURL(region: region, bbox: box.bboxString, width: size, height: size, time: time)
+    }
+
+    /// A GetMap for any rectangle; the radar viewer's requests needn't be square.
+    public static func getMapURL(region: RadarRegion, mapRect: MKMapRect, width: Int, height: Int,
+                                 time: RadarTime?) -> URL {
+        getMapURL(region: region, bbox: MercatorBox.bboxString(for: mapRect), width: width, height: height, time: time)
+    }
+
+    private static func getMapURL(region: RadarRegion, bbox: String, width: Int, height: Int, time: RadarTime?) -> URL {
         var components = URLComponents(url: region.endpoint, resolvingAgainstBaseURL: false)!
         var items = [
             URLQueryItem(name: "SERVICE", value: "WMS"),
@@ -93,9 +105,9 @@ public actor RadarClient {
             URLQueryItem(name: "STYLES", value: ""),
             // EPSG:3857 axis order is x,y even in WMS 1.3.0.
             URLQueryItem(name: "CRS", value: "EPSG:3857"),
-            URLQueryItem(name: "BBOX", value: box.bboxString),
-            URLQueryItem(name: "WIDTH", value: String(size)),
-            URLQueryItem(name: "HEIGHT", value: String(size)),
+            URLQueryItem(name: "BBOX", value: bbox),
+            URLQueryItem(name: "WIDTH", value: String(width)),
+            URLQueryItem(name: "HEIGHT", value: String(height)),
             URLQueryItem(name: "FORMAT", value: "image/png"),
             URLQueryItem(name: "TRANSPARENT", value: "true"),
         ]
@@ -110,25 +122,43 @@ public actor RadarClient {
 
     /// The newest frame time. Cached for `capabilitiesTTL` unless `force`.
     public func latestRadarTime(region: RadarRegion, force: Bool) async throws -> RadarTime {
-        if !force, let cached = cachedTime, cached.regionID == region.id,
+        try await capabilitiesTimes(region: region, force: force).latest
+    }
+
+    /// Every listed frame time (about the last 2 h), oldest first. Cached like `latestRadarTime`.
+    public func recentTimes(region: RadarRegion, force: Bool) async throws -> [RadarTime] {
+        try await capabilitiesTimes(region: region, force: force).all
+    }
+
+    private func capabilitiesTimes(region: RadarRegion, force: Bool) async throws -> CapabilitiesTimes {
+        if !force, let cached = cachedTimes[region.id],
            now().timeIntervalSince(cached.fetchedAt) < Self.capabilitiesTTL {
-            return cached.time
+            return cached.times
         }
         let url = Self.capabilitiesURL(region: region)
         let (data, status) = try await load(url)
         guard status == 200 else { throw RadarClientError.httpStatus(status) }
-        guard let time = CapabilitiesParser.latestTime(in: data, layer: region.layer) else {
+        guard let times = CapabilitiesParser.times(in: data, layer: region.layer) else {
             throw RadarClientError.noTimeInCapabilities
         }
-        cachedTime = (time, now(), region.id)
-        return time
+        cachedTimes[region.id] = (times, now())
+        return times
     }
 
     /// Downloads one GetMap PNG. Pass the time from `latestRadarTime`; never a made-up time,
     /// because out-of-range times return a blank PNG rather than an error.
     public func fetchImage(region: RadarRegion, box: MercatorBox, time: RadarTime?,
                            size: Int = imageSize) async throws -> RadarImage {
-        let url = Self.getMapURL(region: region, box: box, time: time, size: size)
+        try await fetch(Self.getMapURL(region: region, box: box, time: time, size: size))
+    }
+
+    /// Downloads one GetMap PNG for any rectangle. `time` must come from `recentTimes`.
+    public func fetchImage(region: RadarRegion, mapRect: MKMapRect, width: Int, height: Int,
+                           time: RadarTime) async throws -> RadarImage {
+        try await fetch(Self.getMapURL(region: region, mapRect: mapRect, width: width, height: height, time: time))
+    }
+
+    private func fetch(_ url: URL) async throws -> RadarImage {
         let (data, status) = try await load(url)
         try Self.validatePNG(data, httpStatus: status)
         return RadarImage(png: data, url: url, httpStatus: status)
@@ -172,20 +202,35 @@ public actor RadarClient {
     }
 }
 
-/// Pulls the newest time out of a WMS 1.3.0 GetCapabilities document.
+/// The frame times a GetCapabilities document lists for a layer.
+public struct CapabilitiesTimes: Sendable, Equatable {
+    /// The `default` time (the newest frame), or the last listed time if there's no usable default.
+    public let latest: RadarTime
+    /// Every listed time plus `latest`, oldest first, without duplicates.
+    public let all: [RadarTime]
+}
+
+/// Pulls the frame times out of a WMS 1.3.0 GetCapabilities document.
 public enum CapabilitiesParser {
     public static func latestTime(in data: Data, layer: String) -> RadarTime? {
+        times(in: data, layer: layer)?.latest
+    }
+
+    public static func times(in data: Data, layer: String) -> CapabilitiesTimes? {
         let delegate = Delegate(layer: layer)
         let parser = XMLParser(data: data)
         parser.delegate = delegate
         parser.parse()
         guard let dimension = delegate.match ?? delegate.firstTimeDimension else { return nil }
-        if let value = dimension.defaultValue, let time = RadarTime(raw: value) {
-            return time
+        // The list is in ascending order.
+        let listed = dimension.values.split(separator: ",").compactMap { RadarTime(raw: String($0)) }
+        guard let latest = dimension.defaultValue.flatMap(RadarTime.init(raw:)) ?? listed.last else { return nil }
+        // `default` has no fractional seconds, so it doesn't match its list entry textually.
+        var byDate: [Date: RadarTime] = [latest.date: latest]
+        for time in listed where byDate[time.date] == nil {
+            byDate[time.date] = time
         }
-        // No usable `default`: the list is in ascending order, so take the last entry.
-        let last = dimension.values.split(separator: ",").last.map(String.init)
-        return last.flatMap(RadarTime.init(raw:))
+        return CapabilitiesTimes(latest: latest, all: byDate.values.sorted { $0.date < $1.date })
     }
 
     private struct TimeDimension {

@@ -54,6 +54,9 @@ targets:
         CFBundleDisplayName: Radar Glance
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        CFBundleURLTypes:
+          - CFBundleURLName: com.example.radarglance
+            CFBundleURLSchemes: [radarglance]
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         NSLocationWhenInUseUsageDescription: >-

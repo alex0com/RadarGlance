@@ -82,6 +82,8 @@ public struct DebugRecord: Codable, Sendable, Equatable {
     public var resolution: Int?
     public var baseMapReused: Bool?
     public var alignmentErrorPixels: Double?
+    /// The radar source of the last download attempt (`RadarSource.rawValue`).
+    public var source: String?
     public var memory: [MemoryReading] = []
 
     public init(process: String, attemptTime: Date, forced: Bool, outcome: String) {

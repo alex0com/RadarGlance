@@ -75,6 +75,11 @@ public final class SharedStore: @unchecked Sendable {
         static let forceRefreshHandledAt = "forceRefreshHandledAt"
         static let cachedLocation = "cachedLocation"
         static let onboardingDone = "onboardingDone"
+        static let loopLength = "loopLengthMinutes"
+        static let mapSettings = "mapSettings"
+        static let showsWidgetWeather = "showsWidgetWeather"
+        static let weatherConditions = "weatherConditions"
+        static let weatherPoint = "weatherPoint"
     }
 
     /// Used by the app and by medium/large widgets set to Automatic.
@@ -88,6 +93,48 @@ public final class SharedStore: @unchecked Sendable {
     public var carZoom: ZoomLevel {
         get { ZoomLevel(rawValue: defaults.integer(forKey: Key.carZoom)) ?? .carDefault }
         set { defaults.set(newValue.rawValue, forKey: Key.carZoom) }
+    }
+
+    /// How far back the app's radar animation goes.
+    public var loopLength: LoopLength {
+        get { LoopLength(rawValue: defaults.integer(forKey: Key.loopLength)) ?? .defaultValue }
+        set { defaults.set(newValue.rawValue, forKey: Key.loopLength) }
+    }
+
+    /// The app's radar map appearance.
+    public var mapSettings: MapSettings {
+        get {
+            guard let data = defaults.data(forKey: Key.mapSettings),
+                  let settings = try? JSONDecoder().decode(MapSettings.self, from: data)
+            else { return MapSettings() }
+            return settings
+        }
+        set { defaults.set(try? JSONEncoder().encode(newValue), forKey: Key.mapSettings) }
+    }
+
+    /// Show temperature and humidity on the widget.
+    public var showsWidgetWeather: Bool {
+        get { defaults.bool(forKey: Key.showsWidgetWeather) }
+        set { defaults.set(newValue, forKey: Key.showsWidgetWeather) }
+    }
+
+    /// The last conditions `WeatherService` fetched.
+    public var weatherConditions: WeatherConditions? {
+        get { decoded(WeatherConditions.self, forKey: Key.weatherConditions) }
+        set { encode(newValue, forKey: Key.weatherConditions) }
+    }
+
+    var weatherPoint: WeatherPoint? {
+        get { decoded(WeatherPoint.self, forKey: Key.weatherPoint) }
+        set { encode(newValue, forKey: Key.weatherPoint) }
+    }
+
+    private func decoded<T: Decodable>(_ type: T.Type, forKey key: String) -> T? {
+        defaults.data(forKey: key).flatMap { try? JSONDecoder().decode(T.self, from: $0) }
+    }
+
+    private func encode<T: Encodable>(_ value: T?, forKey key: String) {
+        defaults.set(value.flatMap { try? JSONEncoder().encode($0) }, forKey: key)
     }
 
     public var lastNetworkAttempt: Date? {
