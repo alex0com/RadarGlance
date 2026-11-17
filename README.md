@@ -19,13 +19,23 @@ and humidity come from the National Weather Service API. No accounts or API keys
 
 ## Screenshots
 
-### The widget
+### The widget in StandBy
 
 The small widget (Home Screen, StandBy, and CarPlay) shows the radar around you, the radar's
 time, a scale bar, the refresh button, and (optional) temperature and humidity from the nearest
-NWS station. In StandBy it sits next to the clock on its dark tile. To capture StandBy or
-CarPlay from a connected iPhone, see [CarPlay](#carplay) below; the same `devicectl` commands
-work for the iPhone's own screen.
+NWS station. In StandBy it sits next to the clock on its dark tile.
+
+<img src="docs/screenshots/standby.png" width="700" alt="iPhone in StandBy: clock on the left, Radar Glance widget on the right showing rain near Tampa, 66° and 94% humidity">
+
+Captured from a connected iPhone with its location simulated (so the screenshot doesn't reveal
+where the phone really is):
+
+```sh
+xcrun devicectl device simulate location coordinate --device <device-udid> --latitude=28.12 --longitude=-82.6
+# wait for the widget to refresh, then:
+xcrun devicectl device capture screenshot --device <device-udid> --destination docs/screenshots/standby.png
+xcrun devicectl device simulate location clear --device <device-udid>
+```
 
 ### The app
 
