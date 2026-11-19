@@ -18,7 +18,7 @@ struct RadarWidgetView: View {
         // The tile stays dark in both appearances so the radar has contrast.
         .environment(\.colorScheme, .dark)
         // Tapping outside the refresh button opens the app's animated radar map.
-        .widgetURL(URL(string: "radarglance://radar"))
+        .widgetURL(URL(string: "quickradarglance://radar"))
         // The image lives in the content rather than the container background so that
         // WidgetKit animates it between entries. The background stays non-removable.
         .containerBackground(for: .widget) { Self.tileColor }

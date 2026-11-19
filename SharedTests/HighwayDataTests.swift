@@ -58,7 +58,7 @@ struct HighwayDataTests {
     @Test func bundledFileParsesAndStaysInConus() throws {
         let url = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent()
-            .appendingPathComponent("RadarGlance/Resources/highways.bin")
+            .appendingPathComponent("QuickRadarGlance/Resources/highways.bin")
         let lines = try HighwayData.parse(try Data(contentsOf: url))
         #expect(lines.count > 10_000)
         #expect(lines.contains { $0.highwayClass == .interstate })

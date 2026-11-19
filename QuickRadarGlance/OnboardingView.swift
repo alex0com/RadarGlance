@@ -12,7 +12,7 @@ struct OnboardingView: View {
             Text("Radar where you are")
                 .font(.title.bold())
             Text("""
-                Radar Glance shows live NOAA weather radar centered on your position, \
+                QuickRadarGlance shows live NOAA weather radar centered on your position, \
                 here and in the CarPlay widget.
 
                 The widget can only use your location if you allow it here first. \

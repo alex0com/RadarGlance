@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct RadarGlanceApp: App {
+struct QuickRadarGlanceApp: App {
     @State private var model = AppModel()
     @State private var radarLoop = RadarLoopModel()
     @State private var mapSettings = MapSettingsModel()

@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 @main
-struct RadarGlanceWidgetBundle: WidgetBundle {
+struct QuickRadarGlanceWidgetBundle: WidgetBundle {
     var body: some Widget {
         RadarWidget()
     }

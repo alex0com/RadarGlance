@@ -1,4 +1,4 @@
-# Radar Glance
+# QuickRadarGlance
 
 Live NOAA weather radar for the continental US, centered on where you are:
 
@@ -25,7 +25,7 @@ The small widget (Home Screen, StandBy, and CarPlay) shows the radar around you,
 time, a scale bar, the refresh button, and (optional) temperature and humidity from the nearest
 NWS station. In StandBy it sits next to the clock on its dark tile.
 
-<img src="docs/screenshots/standby.png" width="700" alt="iPhone in StandBy: clock on the left, Radar Glance widget on the right showing rain near Tampa, 66° and 94% humidity">
+<img src="docs/screenshots/standby.png" width="700" alt="iPhone in StandBy: clock on the left, QuickRadarGlance widget on the right showing rain near Tampa, 66° and 94% humidity">
 
 Captured from a connected iPhone with its location simulated (so the screenshot doesn't reveal
 where the phone really is):
@@ -63,7 +63,7 @@ xcrun devicectl device capture screenshot --device <device-udid> \
 - macOS with **Xcode 27** (iOS 27 SDK). The app's deployment target is **iOS 26**, the first
   version with CarPlay widgets.
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`). `project.yml` is the
-  source of truth; the generated `RadarGlance.xcodeproj` is committed too.
+  source of truth; the generated `QuickRadarGlance.xcodeproj` is committed too.
 - An Apple developer team for running on a device (Simulator builds need none). Signing comes
   from `Config/Signing.xcconfig`, which defaults to bundle prefix `com.example` and no team.
   Put your own values in `Config/Local.xcconfig` (git-ignored):
@@ -73,31 +73,31 @@ xcrun devicectl device capture screenshot --device <device-udid> \
   BUNDLE_ID_PREFIX = com.yourname
   ```
 
-  The app becomes `<prefix>.radarglance`, the widget `<prefix>.radarglance.widget`, and the
-  shared App Group `group.<prefix>.radarglance` (read at runtime from each Info.plist's
+  The app becomes `<prefix>.quickradarglance`, the widget `<prefix>.quickradarglance.widget`, and the
+  shared App Group `group.<prefix>.quickradarglance` (read at runtime from each Info.plist's
   `AppGroupIdentifier`). Automatic signing registers them on the first device build.
 
 ## Build and test
 
 ```sh
 xcodegen generate          # after editing project.yml or adding files
-xcodebuild -scheme RadarGlance -destination 'generic/platform=iOS Simulator' build
-xcodebuild test -scheme RadarGlance -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+xcodebuild -scheme QuickRadarGlance -destination 'generic/platform=iOS Simulator' build
+xcodebuild test -scheme QuickRadarGlance -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
 The tests (Swift Testing, `SharedTests`) cover the radar pipeline, NOAA/nowCOAST clients, color
 tables, highway data, settings, and the NWS weather service, all against saved fixtures.
 
-Or open `RadarGlance.xcodeproj` in Xcode, pick the **RadarGlance** scheme and a simulator or
+Or open `QuickRadarGlance.xcodeproj` in Xcode, pick the **QuickRadarGlance** scheme and a simulator or
 device, and press Run (⌘R); ⌘U runs the tests.
 
 ## Run in the Simulator
 
 ```sh
 xcrun simctl boot "iPhone 17 Pro"
-xcodebuild -scheme RadarGlance -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
-xcrun simctl install "iPhone 17 Pro" ~/Library/Developer/Xcode/DerivedData/RadarGlance-*/Build/Products/Debug-iphonesimulator/RadarGlance.app
-xcrun simctl launch "iPhone 17 Pro" com.example.radarglance -testLocation 28.12,-82.6   # <prefix>.radarglance
+xcodebuild -scheme QuickRadarGlance -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+xcrun simctl install "iPhone 17 Pro" ~/Library/Developer/Xcode/DerivedData/QuickRadarGlance-*/Build/Products/Debug-iphonesimulator/QuickRadarGlance.app
+xcrun simctl launch "iPhone 17 Pro" com.example.quickradarglance -testLocation 28.12,-82.6   # <prefix>.quickradarglance
 ```
 
 Launch arguments (Debug builds):
@@ -123,21 +123,54 @@ Connect the iPhone by USB (or the same network with pairing enabled), turn on De
 
 ```sh
 xcrun devicectl list devices                     # note the iPhone's identifier
-xcodebuild -scheme RadarGlance -destination 'id=<device-udid>' \
+xcodebuild -scheme QuickRadarGlance -destination 'id=<device-udid>' \
     -derivedDataPath build/DerivedData -allowProvisioningUpdates build
 xcrun devicectl device install app --device <device-udid> \
-    build/DerivedData/Build/Products/Debug-iphoneos/RadarGlance.app
+    build/DerivedData/Build/Products/Debug-iphoneos/QuickRadarGlance.app
 ```
 
-Open Radar Glance once and allow location **While Using** (widgets can't use location unless
+Open QuickRadarGlance once and allow location **While Using** (widgets can't use location unless
 the app has it).
+
+## Publish to TestFlight
+
+The project is set up for App Store Connect: a privacy manifest in the app, widget and Shared
+framework (UserDefaults reasons CA92.1 and 1C8F.1; coarse location for app functionality, not
+linked or tracked), `ITSAppUsesNonExemptEncryption = NO` (HTTPS only), an opaque 1024 px icon,
+and Info.plist versions taken from `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION`.
+
+1. **Apple Developer Program** membership (paid) and `Config/Local.xcconfig` with your team and
+   bundle prefix (see [Requirements](#requirements)).
+2. **App Store Connect → Apps → +**: New App, platform iOS, bundle ID
+   `<prefix>.quickradarglance` (it appears after one device build or archive registers it),
+   a name (must be unique on the App Store), and a SKU.
+3. **Archive and upload** (Apple ID signed in to Xcode → Settings → Accounts, or an App Store
+   Connect API key):
+
+   ```sh
+   tools/archive-testflight.sh                 # archive, sign for the App Store, upload
+   tools/archive-testflight.sh --export-only   # dry run: build/testflight/export/QuickRadarGlance.ipa
+   ASC_KEY_PATH=~/keys/AuthKey_ABC123.p8 ASC_KEY_ID=ABC123 ASC_ISSUER_ID=<issuer-uuid> \
+       tools/archive-testflight.sh             # upload with an API key instead
+   ```
+
+   The build number is the UTC time (e.g. `20261117.2135`), so each upload is higher than the
+   last; raise `MARKETING_VERSION` in `project.yml` for a new version. In Xcode instead: select
+   *Any iOS Device*, Product → Archive, then Distribute App → TestFlight & App Store.
+4. **TestFlight**: after processing (5–30 min), add **internal testers** (members of your App
+   Store Connect team; no review). For **external testers** (email or public link), fill in Test
+   Information (what to test, feedback email; a privacy policy URL may be requested) and submit
+   the build for Beta App Review. The App Privacy section matches the manifest: *Coarse
+   Location — App Functionality, not linked to the user, not used for tracking*.
+
+Testers need iOS 26 or later and the TestFlight app. Builds expire after 90 days.
 
 ## Add the widget
 
-- **Home Screen:** touch and hold the Home Screen → Edit → Add Widget → Radar Glance. Small,
+- **Home Screen:** touch and hold the Home Screen → Edit → Add Widget → QuickRadarGlance. Small,
   medium, and large sizes are available; touch and hold the widget → Edit Widget to pick a zoom.
 - **StandBy:** charge the iPhone on its side while locked. Swipe to the widgets view, touch and
-  hold a widget stack, tap +, and add Radar Glance. The radar keeps its dark tile (the widget's
+  hold a widget stack, tap +, and add QuickRadarGlance. The radar keeps its dark tile (the widget's
   background can't be removed).
 - **CarPlay:** on the iPhone, Settings → General → CarPlay → your car → Widgets → add Radar
   Glance. CarPlay shows the small widget; its zoom is set in the app (Settings → Widget →
@@ -158,7 +191,7 @@ Turn on temperature and humidity in the app: Settings → Widget → Temperature
 
 ## Generated data
 
-- `RadarGlance/Resources/highways.bin`: highway lines from US Census TIGER/Line primary roads.
+- `QuickRadarGlance/Resources/highways.bin`: highway lines from US Census TIGER/Line primary roads.
   Regenerate with the commands at the top of `tools/build-highways.py`.
 - `Shared/RadarPaletteTable.swift`: NOAA radar color → dBZ, measured against nowCOAST. See
   `tools/derive-radar-palette.py` for the method.

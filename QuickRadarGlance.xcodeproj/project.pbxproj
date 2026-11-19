@@ -1,0 +1,980 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		017B347D4B2FE8095CDCE3D6 /* RadarClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AE4339040C996F63339738 /* RadarClientTests.swift */; };
+		089F47D900DAFEFF2FB3CA97 /* service-exception.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1DE7DBE88100F98AF571CE7D /* service-exception.xml */; };
+		13650B76E06C96AD0CB2515E /* RadarPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E240EAA7B24EE98BDB549E0 /* RadarPipeline.swift */; };
+		150FD6B42EE74F237C9712EA /* HighwayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D508D30C161452DD72A964B2 /* HighwayData.swift */; };
+		2558EE44D72DA71AA4C32EF9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D3157524C730DBF2D0C4CB36 /* PrivacyInfo.xcprivacy */; };
+		329A442408B4BF210479DC4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 392C46B7F8A2B28EDA1A9033 /* Assets.xcassets */; };
+		370A226B62B17E1B4891187A /* RadarClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE2BE024F3A73717893EAB /* RadarClient.swift */; };
+		3D5D3B0F10C0AE5A26111ADA /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3ECC11FB070513FBD562888C /* RadarLoopModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B825EDF06AE13CA7A9A86601 /* RadarLoopModel.swift */; };
+		4144ED2FE100DF88931DB852 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06020DF98FFEB15B94697239 /* TestSupport.swift */; };
+		41CE49E9F0FA915CA3939A6D /* RadarLoopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5741ADFD7AFA34D1B58D4E60 /* RadarLoopTests.swift */; };
+		47625EFBBF96A006CDB5BA34 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED4003923A7D9E0BACA1681 /* MainView.swift */; };
+		4C1A23D9195B4A122606EB5B /* HighwayDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBE4B1FFE0A2B433A5E442B /* HighwayDataTests.swift */; };
+		4EB307FED72A41C40964DA64 /* RadarIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A0615136D28222127EF5F8 /* RadarIntents.swift */; };
+		4FCDE0DA728631EA4C547C8A /* RadarLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE94B7A0860D918A5E5476 /* RadarLoop.swift */; };
+		57B310EEC611E07C4D1C5B97 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; };
+		631E6F7163DF0C0EDC0D34F4 /* MapSettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050264FFDA169604ED0326D9 /* MapSettingsModel.swift */; };
+		633BA3E5F07A46B88B631BB2 /* RadarMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267826853C9EA64E62780042 /* RadarMapView.swift */; };
+		6403ACCBA277E9CF1A9F72F7 /* RadarCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED29886BA95CA3D0A609159 /* RadarCache.swift */; };
+		68DB09DAE742C139F056E675 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; };
+		6DF074946A4402F3305B0B1D /* RadarPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C3D7573282680023A28864 /* RadarPalette.swift */; };
+		6E48D3F6405C6065ADD949A3 /* MapSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F937BD80F95E2F3D388470EF /* MapSettingsTests.swift */; };
+		76BDD0B681A7E4D30154CC29 /* RadarCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655F8C9D4B4EB8D9AF9FA1AE /* RadarCacheTests.swift */; };
+		780A2DF76A825B26DC474BD7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B452971F2E7EBE0CD65204DC /* PrivacyInfo.xcprivacy */; };
+		79AAD3652A4C01508704D917 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 20B282FF1AE3E2D157E98772 /* PrivacyInfo.xcprivacy */; };
+		79E87E316B800B971FE7CDF1 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90CDC40A9DCCA597CDCB58C /* LocationService.swift */; };
+		7AA672BB7F71A9A0EEBFFCEF /* RadarAge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B66378F43118F27742DBC09 /* RadarAge.swift */; };
+		7F92460F97B9DEF9E0482B44 /* CarPlayHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB507C938DE0F2143E0C0EF /* CarPlayHelpView.swift */; };
+		7FC683AE052847C19022E9FA /* QuickRadarGlanceWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		80DFFFBF2FFF59B0B500390D /* MercatorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56FC8D8EFBB14C29726F919 /* MercatorBox.swift */; };
+		83067EFF156EF9F27E21845C /* WeatherServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669709C88A1601163134DDC /* WeatherServiceTests.swift */; };
+		83B4F8B2860E4FD358ED2817 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EBD2A432AD0D580AFC5064 /* WeatherService.swift */; };
+		88DFCC6E7C849887B12C2C8F /* nws-stations.json in Resources */ = {isa = PBXBuildFile; fileRef = 63B286FA4381C8C68021428F /* nws-stations.json */; };
+		8B60F2D12506704DDD7B9962 /* RadarPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FBE973B918FE7B8287E4D3F /* RadarPaletteTests.swift */; };
+		96A63B22058623A22CEA24BD /* RadarTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2086FB125D27A9DA7EB6E /* RadarTimelineProvider.swift */; };
+		989E0D313D8EC45C21FD76BC /* nws-points.json in Resources */ = {isa = PBXBuildFile; fileRef = D1FB4C8FCDBC088F38FE1F35 /* nws-points.json */; };
+		9981789205947CA286ED6DC7 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */; };
+		9CA80EF8CA5B54127B5B9144 /* RadarPaletteTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9962E30F01A482666025582D /* RadarPaletteTable.swift */; };
+		9D121B872F147288F69315D5 /* RadarRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944FB32661BDE1148C97727E /* RadarRegion.swift */; };
+		9FB5E91BA6FEDCAB5D649B94 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A13889F4FD517C2B71CD1639 /* RadarCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE103DC027F7D8533A14C7 /* RadarCompositor.swift */; };
+		A2C6BA66AAF83DA8C227CD32 /* RadarSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38F4BB904DC585B05C4E0FC /* RadarSource.swift */; };
+		AB7E1ACBB2842A8A1CA2E3ED /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; };
+		B1D8DF438446815BABB68D1C /* highways.bin in Resources */ = {isa = PBXBuildFile; fileRef = 5F1C8BCF96E544B4D98B2F56 /* highways.bin */; };
+		B1F0C52E6CD251BF9B52D6D9 /* RadarWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8475D81B76FB42A90263DEF /* RadarWidgetView.swift */; };
+		B6A17E33A752235CD4E8407B /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAFAA3BC6E8474D709184E8 /* OnboardingView.swift */; };
+		BD41A3AFB534FDE0C32BD89B /* nws-hourly.json in Resources */ = {isa = PBXBuildFile; fileRef = CAD4B2BBF8AA90D769A14E11 /* nws-hourly.json */; };
+		BD8BB698CB1F7B6DD97716E1 /* RadarSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D74B307BE5D9735AC10730 /* RadarSourceTests.swift */; };
+		C22784A857B326CD437AD292 /* BaseMapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E81AD946141E5930BAE64F /* BaseMapRenderer.swift */; };
+		CC51BD34A9554646A993D1B1 /* QuickRadarGlanceWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED41F7E0B5DB5A8CE203185B /* QuickRadarGlanceWidget.swift */; };
+		CE3A5A1CCB3069268A0D841E /* conus-capabilities.xml in Resources */ = {isa = PBXBuildFile; fileRef = A977016A4104F4F00A0DE60A /* conus-capabilities.xml */; };
+		D63B02110B46C44212CB28B0 /* MercatorBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC25364F72FC6688F6B5BE4 /* MercatorBoxTests.swift */; };
+		D9BCAA8FA357D2326AC46285 /* nws-observation.json in Resources */ = {isa = PBXBuildFile; fileRef = 712A512343889F7F2E0FBD7C /* nws-observation.json */; };
+		DE7A0709E42B6CB8F60B1E68 /* RadarPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997EF803CE7E1B38C703A3C6 /* RadarPipelineTests.swift */; };
+		DF82330C7D9E674AA796F8C4 /* nowcoast-capabilities.xml in Resources */ = {isa = PBXBuildFile; fileRef = DB00817FACE40A545D4779CC /* nowcoast-capabilities.xml */; };
+		E11EEE101281C41E5F644487 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B272DAC98E2A790C8E4CE74 /* SharedStore.swift */; };
+		E3BD778FA4DCA806CB08EA62 /* WidgetImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E641EF27B8B0DCDFA52188E /* WidgetImageTests.swift */; };
+		E7E1F534539DECC88F922175 /* ScaleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E0411B3BA54380E1AFDACC /* ScaleBar.swift */; };
+		E8354F487494D6E6A290ADC2 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18CBA1E61EDD167245A992 /* AppModel.swift */; };
+		F4CA618A3B78716C05E8FCDB /* radar-sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFF1E483E4432A14F997EF1 /* radar-sample.png */; };
+		F5C9AF479AA6E51A5790A9F2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D27414764C02B47FE8EFB5 /* SettingsView.swift */; };
+		F6392F8E3A77F30293DF4A61 /* QuickRadarGlanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1062B0C28E9F1B9AC1208F0 /* QuickRadarGlanceApp.swift */; };
+		F85C2D95B6234756E30CD18C /* WidgetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E25D5709B3DD24B281E3A2 /* WidgetImage.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0A7D2223016D3CBF4032C6D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04961C3C7F6C8C144BFAA628;
+			remoteInfo = QuickRadarGlanceWidget;
+		};
+		18593E3A3558F4A0E026E8A2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B92298BEA37355453CCA753D;
+			remoteInfo = Shared;
+		};
+		7F3D699F06F77FC0A10346E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B92298BEA37355453CCA753D;
+			remoteInfo = Shared;
+		};
+		CECD258E4A0924FE42F4F55A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B92298BEA37355453CCA753D;
+			remoteInfo = Shared;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0E8D8BB353EBA7677CC71288 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9FB5E91BA6FEDCAB5D649B94 /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DF8F5827A7BA0EA86AE35A8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3D5D3B0F10C0AE5A26111ADA /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFF0A773020DE948F47F1C4E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7FC683AE052847C19022E9FA /* QuickRadarGlanceWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		03AE94B7A0860D918A5E5476 /* RadarLoop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarLoop.swift; sourceTree = "<group>"; };
+		050264FFDA169604ED0326D9 /* MapSettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsModel.swift; sourceTree = "<group>"; };
+		06020DF98FFEB15B94697239 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
+		0669709C88A1601163134DDC /* WeatherServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherServiceTests.swift; sourceTree = "<group>"; };
+		0FBE973B918FE7B8287E4D3F /* RadarPaletteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPaletteTests.swift; sourceTree = "<group>"; };
+		14BE103DC027F7D8533A14C7 /* RadarCompositor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCompositor.swift; sourceTree = "<group>"; };
+		18F915A3238685ED8A86373C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1BC25364F72FC6688F6B5BE4 /* MercatorBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercatorBoxTests.swift; sourceTree = "<group>"; };
+		1DE7DBE88100F98AF571CE7D /* service-exception.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "service-exception.xml"; sourceTree = "<group>"; };
+		1F84B9D4F5976F215EF59105 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		20B282FF1AE3E2D157E98772 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		20D27414764C02B47FE8EFB5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		23A0615136D28222127EF5F8 /* RadarIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarIntents.swift; sourceTree = "<group>"; };
+		267826853C9EA64E62780042 /* RadarMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarMapView.swift; sourceTree = "<group>"; };
+		371E7DAD9CC497E5703B6D51 /* SharedTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SharedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		392C46B7F8A2B28EDA1A9033 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3AB2086FB125D27A9DA7EB6E /* RadarTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarTimelineProvider.swift; sourceTree = "<group>"; };
+		3AFF1E483E4432A14F997EF1 /* radar-sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radar-sample.png"; sourceTree = "<group>"; };
+		3B66378F43118F27742DBC09 /* RadarAge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarAge.swift; sourceTree = "<group>"; };
+		3E641EF27B8B0DCDFA52188E /* WidgetImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetImageTests.swift; sourceTree = "<group>"; };
+		41FE2BE024F3A73717893EAB /* RadarClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarClient.swift; sourceTree = "<group>"; };
+		48C3D7573282680023A28864 /* RadarPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPalette.swift; sourceTree = "<group>"; };
+		53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = QuickRadarGlanceWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5741ADFD7AFA34D1B58D4E60 /* RadarLoopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarLoopTests.swift; sourceTree = "<group>"; };
+		5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
+		5F1C8BCF96E544B4D98B2F56 /* highways.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = highways.bin; sourceTree = "<group>"; };
+		63B286FA4381C8C68021428F /* nws-stations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-stations.json"; sourceTree = "<group>"; };
+		655F8C9D4B4EB8D9AF9FA1AE /* RadarCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCacheTests.swift; sourceTree = "<group>"; };
+		712A512343889F7F2E0FBD7C /* nws-observation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-observation.json"; sourceTree = "<group>"; };
+		75AE4339040C996F63339738 /* RadarClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarClientTests.swift; sourceTree = "<group>"; };
+		78D74B307BE5D9735AC10730 /* RadarSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarSourceTests.swift; sourceTree = "<group>"; };
+		79EBD2A432AD0D580AFC5064 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
+		81616FE44C1D20A3DA606330 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8317591A1D43E006D8205385 /* QuickRadarGlance.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = QuickRadarGlance.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		944FB32661BDE1148C97727E /* RadarRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarRegion.swift; sourceTree = "<group>"; };
+		9962E30F01A482666025582D /* RadarPaletteTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPaletteTable.swift; sourceTree = "<group>"; };
+		997EF803CE7E1B38C703A3C6 /* RadarPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPipelineTests.swift; sourceTree = "<group>"; };
+		9A2A7ED3E8AD52C12A6816EE /* QuickRadarGlanceWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickRadarGlanceWidget.entitlements; sourceTree = "<group>"; };
+		9B272DAC98E2A790C8E4CE74 /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
+		9E240EAA7B24EE98BDB549E0 /* RadarPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPipeline.swift; sourceTree = "<group>"; };
+		A56FC8D8EFBB14C29726F919 /* MercatorBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercatorBox.swift; sourceTree = "<group>"; };
+		A977016A4104F4F00A0DE60A /* conus-capabilities.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "conus-capabilities.xml"; sourceTree = "<group>"; };
+		B38F4BB904DC585B05C4E0FC /* RadarSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarSource.swift; sourceTree = "<group>"; };
+		B452971F2E7EBE0CD65204DC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B825EDF06AE13CA7A9A86601 /* RadarLoopModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarLoopModel.swift; sourceTree = "<group>"; };
+		BAAFAA3BC6E8474D709184E8 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		BAB507C938DE0F2143E0C0EF /* CarPlayHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayHelpView.swift; sourceTree = "<group>"; };
+		C2E0411B3BA54380E1AFDACC /* ScaleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleBar.swift; sourceTree = "<group>"; };
+		C6E25D5709B3DD24B281E3A2 /* WidgetImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetImage.swift; sourceTree = "<group>"; };
+		CAD4B2BBF8AA90D769A14E11 /* nws-hourly.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-hourly.json"; sourceTree = "<group>"; };
+		D1062B0C28E9F1B9AC1208F0 /* QuickRadarGlanceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRadarGlanceApp.swift; sourceTree = "<group>"; };
+		D1FB4C8FCDBC088F38FE1F35 /* nws-points.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-points.json"; sourceTree = "<group>"; };
+		D3157524C730DBF2D0C4CB36 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D508D30C161452DD72A964B2 /* HighwayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayData.swift; sourceTree = "<group>"; };
+		D8475D81B76FB42A90263DEF /* RadarWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarWidgetView.swift; sourceTree = "<group>"; };
+		D90CDC40A9DCCA597CDCB58C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		DB00817FACE40A545D4779CC /* nowcoast-capabilities.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "nowcoast-capabilities.xml"; sourceTree = "<group>"; };
+		DED4003923A7D9E0BACA1681 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		E1A51C38D6FEB31481E39785 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E9E81AD946141E5930BAE64F /* BaseMapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMapRenderer.swift; sourceTree = "<group>"; };
+		ED41F7E0B5DB5A8CE203185B /* QuickRadarGlanceWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRadarGlanceWidget.swift; sourceTree = "<group>"; };
+		F168A7E692E1B2FDA755DADD /* QuickRadarGlance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickRadarGlance.entitlements; sourceTree = "<group>"; };
+		F937BD80F95E2F3D388470EF /* MapSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsTests.swift; sourceTree = "<group>"; };
+		FE18CBA1E61EDD167245A992 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		FED29886BA95CA3D0A609159 /* RadarCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCache.swift; sourceTree = "<group>"; };
+		FFBE4B1FFE0A2B433A5E442B /* HighwayDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayDataTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A08388B05105A57DA68F0F01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57B310EEC611E07C4D1C5B97 /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC8F8D1DEB03CD6F39DEB943 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68DB09DAE742C139F056E675 /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C68DFDCD36FC79AB6DCC6682 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB7E1ACBB2842A8A1CA2E3ED /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0CFF9F6A38DDEDA86799E0FC = {
+			isa = PBXGroup;
+			children = (
+				A236C2F31B4B677CDF86994E /* Config */,
+				9AB46480B2A7F350DCDD3ADC /* QuickRadarGlance */,
+				310B77D65383EEAFFBCF4395 /* QuickRadarGlanceWidget */,
+				6FCDFB8C2DC7D60F1668EBB5 /* Shared */,
+				6F7EB4C0D0437D1BF0C400AC /* SharedTests */,
+				A9189327AA3472B3838C5B22 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		310B77D65383EEAFFBCF4395 /* QuickRadarGlanceWidget */ = {
+			isa = PBXGroup;
+			children = (
+				18F915A3238685ED8A86373C /* Info.plist */,
+				B452971F2E7EBE0CD65204DC /* PrivacyInfo.xcprivacy */,
+				9A2A7ED3E8AD52C12A6816EE /* QuickRadarGlanceWidget.entitlements */,
+				ED41F7E0B5DB5A8CE203185B /* QuickRadarGlanceWidget.swift */,
+				23A0615136D28222127EF5F8 /* RadarIntents.swift */,
+				3AB2086FB125D27A9DA7EB6E /* RadarTimelineProvider.swift */,
+				D8475D81B76FB42A90263DEF /* RadarWidgetView.swift */,
+			);
+			path = QuickRadarGlanceWidget;
+			sourceTree = "<group>";
+		};
+		4E5F68F34E48E3C1A373493C /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				A977016A4104F4F00A0DE60A /* conus-capabilities.xml */,
+				DB00817FACE40A545D4779CC /* nowcoast-capabilities.xml */,
+				CAD4B2BBF8AA90D769A14E11 /* nws-hourly.json */,
+				712A512343889F7F2E0FBD7C /* nws-observation.json */,
+				D1FB4C8FCDBC088F38FE1F35 /* nws-points.json */,
+				63B286FA4381C8C68021428F /* nws-stations.json */,
+				3AFF1E483E4432A14F997EF1 /* radar-sample.png */,
+				1DE7DBE88100F98AF571CE7D /* service-exception.xml */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		6F7EB4C0D0437D1BF0C400AC /* SharedTests */ = {
+			isa = PBXGroup;
+			children = (
+				FFBE4B1FFE0A2B433A5E442B /* HighwayDataTests.swift */,
+				F937BD80F95E2F3D388470EF /* MapSettingsTests.swift */,
+				1BC25364F72FC6688F6B5BE4 /* MercatorBoxTests.swift */,
+				655F8C9D4B4EB8D9AF9FA1AE /* RadarCacheTests.swift */,
+				75AE4339040C996F63339738 /* RadarClientTests.swift */,
+				5741ADFD7AFA34D1B58D4E60 /* RadarLoopTests.swift */,
+				0FBE973B918FE7B8287E4D3F /* RadarPaletteTests.swift */,
+				997EF803CE7E1B38C703A3C6 /* RadarPipelineTests.swift */,
+				78D74B307BE5D9735AC10730 /* RadarSourceTests.swift */,
+				06020DF98FFEB15B94697239 /* TestSupport.swift */,
+				0669709C88A1601163134DDC /* WeatherServiceTests.swift */,
+				3E641EF27B8B0DCDFA52188E /* WidgetImageTests.swift */,
+				4E5F68F34E48E3C1A373493C /* Fixtures */,
+			);
+			path = SharedTests;
+			sourceTree = "<group>";
+		};
+		6FCDFB8C2DC7D60F1668EBB5 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E9E81AD946141E5930BAE64F /* BaseMapRenderer.swift */,
+				D508D30C161452DD72A964B2 /* HighwayData.swift */,
+				D90CDC40A9DCCA597CDCB58C /* LocationService.swift */,
+				5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */,
+				A56FC8D8EFBB14C29726F919 /* MercatorBox.swift */,
+				20B282FF1AE3E2D157E98772 /* PrivacyInfo.xcprivacy */,
+				3B66378F43118F27742DBC09 /* RadarAge.swift */,
+				FED29886BA95CA3D0A609159 /* RadarCache.swift */,
+				41FE2BE024F3A73717893EAB /* RadarClient.swift */,
+				14BE103DC027F7D8533A14C7 /* RadarCompositor.swift */,
+				03AE94B7A0860D918A5E5476 /* RadarLoop.swift */,
+				48C3D7573282680023A28864 /* RadarPalette.swift */,
+				9962E30F01A482666025582D /* RadarPaletteTable.swift */,
+				9E240EAA7B24EE98BDB549E0 /* RadarPipeline.swift */,
+				944FB32661BDE1148C97727E /* RadarRegion.swift */,
+				B38F4BB904DC585B05C4E0FC /* RadarSource.swift */,
+				C2E0411B3BA54380E1AFDACC /* ScaleBar.swift */,
+				9B272DAC98E2A790C8E4CE74 /* SharedStore.swift */,
+				79EBD2A432AD0D580AFC5064 /* WeatherService.swift */,
+				C6E25D5709B3DD24B281E3A2 /* WidgetImage.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		9AB46480B2A7F350DCDD3ADC /* QuickRadarGlance */ = {
+			isa = PBXGroup;
+			children = (
+				FE18CBA1E61EDD167245A992 /* AppModel.swift */,
+				392C46B7F8A2B28EDA1A9033 /* Assets.xcassets */,
+				BAB507C938DE0F2143E0C0EF /* CarPlayHelpView.swift */,
+				E1A51C38D6FEB31481E39785 /* Info.plist */,
+				DED4003923A7D9E0BACA1681 /* MainView.swift */,
+				050264FFDA169604ED0326D9 /* MapSettingsModel.swift */,
+				BAAFAA3BC6E8474D709184E8 /* OnboardingView.swift */,
+				D3157524C730DBF2D0C4CB36 /* PrivacyInfo.xcprivacy */,
+				F168A7E692E1B2FDA755DADD /* QuickRadarGlance.entitlements */,
+				D1062B0C28E9F1B9AC1208F0 /* QuickRadarGlanceApp.swift */,
+				B825EDF06AE13CA7A9A86601 /* RadarLoopModel.swift */,
+				267826853C9EA64E62780042 /* RadarMapView.swift */,
+				20D27414764C02B47FE8EFB5 /* SettingsView.swift */,
+				D3C5D79DD14018DF5CD4C7AA /* Resources */,
+			);
+			path = QuickRadarGlance;
+			sourceTree = "<group>";
+		};
+		A236C2F31B4B677CDF86994E /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1F84B9D4F5976F215EF59105 /* Signing.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		A9189327AA3472B3838C5B22 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8317591A1D43E006D8205385 /* QuickRadarGlance.app */,
+				53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */,
+				81616FE44C1D20A3DA606330 /* Shared.framework */,
+				371E7DAD9CC497E5703B6D51 /* SharedTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D3C5D79DD14018DF5CD4C7AA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5F1C8BCF96E544B4D98B2F56 /* highways.bin */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		04961C3C7F6C8C144BFAA628 /* QuickRadarGlanceWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC3F22BDF142A66E660DE14F /* Build configuration list for PBXNativeTarget "QuickRadarGlanceWidget" */;
+			buildPhases = (
+				F242A09501979C79824FEA23 /* Sources */,
+				B69CA74E4E90A5B8FE10876F /* Resources */,
+				BC8F8D1DEB03CD6F39DEB943 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5C1F874604D91EA59923DE6 /* PBXTargetDependency */,
+			);
+			name = QuickRadarGlanceWidget;
+			packageProductDependencies = (
+			);
+			productName = QuickRadarGlanceWidget;
+			productReference = 53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		224FB27DB4ADAD5DF4FFA604 /* QuickRadarGlance */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 686B30D7D3932AC3767BC18C /* Build configuration list for PBXNativeTarget "QuickRadarGlance" */;
+			buildPhases = (
+				56E1B5D71228BEC3E913DF85 /* Sources */,
+				09EAC3929AD6C13FC052821A /* Resources */,
+				A08388B05105A57DA68F0F01 /* Frameworks */,
+				DFF0A773020DE948F47F1C4E /* Embed Foundation Extensions */,
+				9DF8F5827A7BA0EA86AE35A8 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A54820F19BBBAD1528B69B0F /* PBXTargetDependency */,
+				9A8B500CCC2E2DADC183D32A /* PBXTargetDependency */,
+			);
+			name = QuickRadarGlance;
+			packageProductDependencies = (
+			);
+			productName = QuickRadarGlance;
+			productReference = 8317591A1D43E006D8205385 /* QuickRadarGlance.app */;
+			productType = "com.apple.product-type.application";
+		};
+		26DF6009505D927D999D6CCC /* SharedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD87735B0B81100D510D9CC6 /* Build configuration list for PBXNativeTarget "SharedTests" */;
+			buildPhases = (
+				ECB56787064051741B4A391B /* Sources */,
+				044F30B39EE3F225CA8CFEF6 /* Resources */,
+				C68DFDCD36FC79AB6DCC6682 /* Frameworks */,
+				0E8D8BB353EBA7677CC71288 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC0CFB3A208A8D4A9BF0516B /* PBXTargetDependency */,
+			);
+			name = SharedTests;
+			packageProductDependencies = (
+			);
+			productName = SharedTests;
+			productReference = 371E7DAD9CC497E5703B6D51 /* SharedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B92298BEA37355453CCA753D /* Shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0B507974323DD3E84C105285 /* Build configuration list for PBXNativeTarget "Shared" */;
+			buildPhases = (
+				CB326AF8782558798E307CA7 /* Sources */,
+				6450AE5EB6ED0D5F4822C1F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Shared;
+			packageProductDependencies = (
+			);
+			productName = Shared;
+			productReference = 81616FE44C1D20A3DA606330 /* Shared.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5AEF403230414163CECC5FC6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					04961C3C7F6C8C144BFAA628 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					224FB27DB4ADAD5DF4FFA604 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					26DF6009505D927D999D6CCC = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					B92298BEA37355453CCA753D = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = CAD76AD49C90BDE003367D92 /* Build configuration list for PBXProject "QuickRadarGlance" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 0CFF9F6A38DDEDA86799E0FC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A9189327AA3472B3838C5B22 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B92298BEA37355453CCA753D /* Shared */,
+				26DF6009505D927D999D6CCC /* SharedTests */,
+				224FB27DB4ADAD5DF4FFA604 /* QuickRadarGlance */,
+				04961C3C7F6C8C144BFAA628 /* QuickRadarGlanceWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		044F30B39EE3F225CA8CFEF6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE3A5A1CCB3069268A0D841E /* conus-capabilities.xml in Resources */,
+				DF82330C7D9E674AA796F8C4 /* nowcoast-capabilities.xml in Resources */,
+				BD41A3AFB534FDE0C32BD89B /* nws-hourly.json in Resources */,
+				D9BCAA8FA357D2326AC46285 /* nws-observation.json in Resources */,
+				989E0D313D8EC45C21FD76BC /* nws-points.json in Resources */,
+				88DFCC6E7C849887B12C2C8F /* nws-stations.json in Resources */,
+				F4CA618A3B78716C05E8FCDB /* radar-sample.png in Resources */,
+				089F47D900DAFEFF2FB3CA97 /* service-exception.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09EAC3929AD6C13FC052821A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				329A442408B4BF210479DC4D /* Assets.xcassets in Resources */,
+				2558EE44D72DA71AA4C32EF9 /* PrivacyInfo.xcprivacy in Resources */,
+				B1D8DF438446815BABB68D1C /* highways.bin in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6450AE5EB6ED0D5F4822C1F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79AAD3652A4C01508704D917 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B69CA74E4E90A5B8FE10876F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				780A2DF76A825B26DC474BD7 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		56E1B5D71228BEC3E913DF85 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8354F487494D6E6A290ADC2 /* AppModel.swift in Sources */,
+				7F92460F97B9DEF9E0482B44 /* CarPlayHelpView.swift in Sources */,
+				47625EFBBF96A006CDB5BA34 /* MainView.swift in Sources */,
+				631E6F7163DF0C0EDC0D34F4 /* MapSettingsModel.swift in Sources */,
+				B6A17E33A752235CD4E8407B /* OnboardingView.swift in Sources */,
+				F6392F8E3A77F30293DF4A61 /* QuickRadarGlanceApp.swift in Sources */,
+				3ECC11FB070513FBD562888C /* RadarLoopModel.swift in Sources */,
+				633BA3E5F07A46B88B631BB2 /* RadarMapView.swift in Sources */,
+				F5C9AF479AA6E51A5790A9F2 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB326AF8782558798E307CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C22784A857B326CD437AD292 /* BaseMapRenderer.swift in Sources */,
+				150FD6B42EE74F237C9712EA /* HighwayData.swift in Sources */,
+				79E87E316B800B971FE7CDF1 /* LocationService.swift in Sources */,
+				9981789205947CA286ED6DC7 /* MapSettings.swift in Sources */,
+				80DFFFBF2FFF59B0B500390D /* MercatorBox.swift in Sources */,
+				7AA672BB7F71A9A0EEBFFCEF /* RadarAge.swift in Sources */,
+				6403ACCBA277E9CF1A9F72F7 /* RadarCache.swift in Sources */,
+				370A226B62B17E1B4891187A /* RadarClient.swift in Sources */,
+				A13889F4FD517C2B71CD1639 /* RadarCompositor.swift in Sources */,
+				4FCDE0DA728631EA4C547C8A /* RadarLoop.swift in Sources */,
+				6DF074946A4402F3305B0B1D /* RadarPalette.swift in Sources */,
+				9CA80EF8CA5B54127B5B9144 /* RadarPaletteTable.swift in Sources */,
+				13650B76E06C96AD0CB2515E /* RadarPipeline.swift in Sources */,
+				9D121B872F147288F69315D5 /* RadarRegion.swift in Sources */,
+				A2C6BA66AAF83DA8C227CD32 /* RadarSource.swift in Sources */,
+				E7E1F534539DECC88F922175 /* ScaleBar.swift in Sources */,
+				E11EEE101281C41E5F644487 /* SharedStore.swift in Sources */,
+				83B4F8B2860E4FD358ED2817 /* WeatherService.swift in Sources */,
+				F85C2D95B6234756E30CD18C /* WidgetImage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ECB56787064051741B4A391B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C1A23D9195B4A122606EB5B /* HighwayDataTests.swift in Sources */,
+				6E48D3F6405C6065ADD949A3 /* MapSettingsTests.swift in Sources */,
+				D63B02110B46C44212CB28B0 /* MercatorBoxTests.swift in Sources */,
+				76BDD0B681A7E4D30154CC29 /* RadarCacheTests.swift in Sources */,
+				017B347D4B2FE8095CDCE3D6 /* RadarClientTests.swift in Sources */,
+				41CE49E9F0FA915CA3939A6D /* RadarLoopTests.swift in Sources */,
+				8B60F2D12506704DDD7B9962 /* RadarPaletteTests.swift in Sources */,
+				DE7A0709E42B6CB8F60B1E68 /* RadarPipelineTests.swift in Sources */,
+				BD8BB698CB1F7B6DD97716E1 /* RadarSourceTests.swift in Sources */,
+				4144ED2FE100DF88931DB852 /* TestSupport.swift in Sources */,
+				83067EFF156EF9F27E21845C /* WeatherServiceTests.swift in Sources */,
+				E3BD778FA4DCA806CB08EA62 /* WidgetImageTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F242A09501979C79824FEA23 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC51BD34A9554646A993D1B1 /* QuickRadarGlanceWidget.swift in Sources */,
+				4EB307FED72A41C40964DA64 /* RadarIntents.swift in Sources */,
+				96A63B22058623A22CEA24BD /* RadarTimelineProvider.swift in Sources */,
+				B1F0C52E6CD251BF9B52D6D9 /* RadarWidgetView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9A8B500CCC2E2DADC183D32A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04961C3C7F6C8C144BFAA628 /* QuickRadarGlanceWidget */;
+			targetProxy = 0A7D2223016D3CBF4032C6D0 /* PBXContainerItemProxy */;
+		};
+		A54820F19BBBAD1528B69B0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B92298BEA37355453CCA753D /* Shared */;
+			targetProxy = CECD258E4A0924FE42F4F55A /* PBXContainerItemProxy */;
+		};
+		CC0CFB3A208A8D4A9BF0516B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B92298BEA37355453CCA753D /* Shared */;
+			targetProxy = 7F3D699F06F77FC0A10346E3 /* PBXContainerItemProxy */;
+		};
+		F5C1F874604D91EA59923DE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B92298BEA37355453CCA753D /* Shared */;
+			targetProxy = 18593E3A3558F4A0E026E8A2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		06241E7DBDC42C1446C63957 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = QuickRadarGlanceWidget/QuickRadarGlanceWidget.entitlements;
+				INFOPLIST_FILE = QuickRadarGlanceWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.widget";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		06F1288BEB64AC85FE7F05CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F84B9D4F5976F215EF59105 /* Signing.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		34F9D72BE7D392A167E9DA49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.shared";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		43BCC2ED8D68ECFD2C21440B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F84B9D4F5976F215EF59105 /* Signing.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		5B55882106F3558DECFF020A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.sharedtests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6D43C8069680E6A0CCD30F08 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = QuickRadarGlance/QuickRadarGlance.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = QuickRadarGlance/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		761DE0B7DE3831C9773F649C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.sharedtests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		971E93F931F506FA1E8FECB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = QuickRadarGlanceWidget/QuickRadarGlanceWidget.entitlements;
+				INFOPLIST_FILE = QuickRadarGlanceWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.widget";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F95F91C763B795CF534AD45B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.shared";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		FF157BD5DFC54E15C1422BDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = QuickRadarGlance/QuickRadarGlance.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = QuickRadarGlance/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0B507974323DD3E84C105285 /* Build configuration list for PBXNativeTarget "Shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F95F91C763B795CF534AD45B /* Debug */,
+				34F9D72BE7D392A167E9DA49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		686B30D7D3932AC3767BC18C /* Build configuration list for PBXNativeTarget "QuickRadarGlance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D43C8069680E6A0CCD30F08 /* Debug */,
+				FF157BD5DFC54E15C1422BDD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BD87735B0B81100D510D9CC6 /* Build configuration list for PBXNativeTarget "SharedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				761DE0B7DE3831C9773F649C /* Debug */,
+				5B55882106F3558DECFF020A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CAD76AD49C90BDE003367D92 /* Build configuration list for PBXProject "QuickRadarGlance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06F1288BEB64AC85FE7F05CB /* Debug */,
+				43BCC2ED8D68ECFD2C21440B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EC3F22BDF142A66E660DE14F /* Build configuration list for PBXNativeTarget "QuickRadarGlanceWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06241E7DBDC42C1446C63957 /* Debug */,
+				971E93F931F506FA1E8FECB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5AEF403230414163CECC5FC6 /* Project object */;
+}

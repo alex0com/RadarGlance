@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.$(BUNDLE_ID_PREFIX).radarglance</string>
+		<string>group.$(BUNDLE_ID_PREFIX).quickradarglance</string>
 	</array>
 </dict>
 </plist>

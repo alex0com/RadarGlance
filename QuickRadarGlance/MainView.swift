@@ -5,7 +5,7 @@ import SwiftUI
 /// Full-screen animated radar map. Opened by launching the app or tapping the widget.
 struct MainView: View {
     /// The widget opens the app with this URL.
-    static let radarURL = URL(string: "radarglance://radar")!
+    static let radarURL = URL(string: "quickradarglance://radar")!
 
     @Environment(AppModel.self) private var model
     @Environment(RadarLoopModel.self) private var loop
@@ -134,7 +134,7 @@ struct MainView: View {
 
     private var locationBanner: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Location is off for Radar Glance").font(.headline)
+            Text("Location is off for QuickRadarGlance").font(.headline)
             Text("The CarPlay widget needs While Using or Always.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)

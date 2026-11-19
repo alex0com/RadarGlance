@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>AppGroupIdentifier</key>
-	<string>group.$(BUNDLE_ID_PREFIX).radarglance</string>
+	<string>group.$(BUNDLE_ID_PREFIX).quickradarglance</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Radar Glance</string>
+	<string>QuickRadarGlance</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,16 +19,16 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Radar Glance centers the weather radar on where you are.</string>
+	<string>QuickRadarGlance centers the weather radar on where you are.</string>
 	<key>NSWidgetWantsLocation</key>
 	<true/>
 </dict>

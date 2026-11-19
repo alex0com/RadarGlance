@@ -2,8 +2,8 @@
 // Config/Local.xcconfig (git-ignored) with your own values, e.g.
 //   DEVELOPMENT_TEAM = ABCDE12345
 //   BUNDLE_ID_PREFIX = com.yourname
-// The app is <prefix>.radarglance, the widget <prefix>.radarglance.widget, and the shared
-// App Group group.<prefix>.radarglance.
+// The app is <prefix>.quickradarglance, the widget <prefix>.quickradarglance.widget, and the shared
+// App Group group.<prefix>.quickradarglance.
 BUNDLE_ID_PREFIX = com.example
 DEVELOPMENT_TEAM =
 

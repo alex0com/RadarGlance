@@ -96,9 +96,9 @@ final class MockRenderer: BaseMapRendering, @unchecked Sendable {
 }
 
 func temporaryDirectory() -> URL {
-    FileManager.default.temporaryDirectory.appending(path: "RadarGlanceTests-\(UUID().uuidString)")
+    FileManager.default.temporaryDirectory.appending(path: "QuickRadarGlanceTests-\(UUID().uuidString)")
 }
 
 func temporaryDefaults() -> UserDefaults {
-    UserDefaults(suiteName: "RadarGlanceTests-\(UUID().uuidString)")!
+    UserDefaults(suiteName: "QuickRadarGlanceTests-\(UUID().uuidString)")!
 }

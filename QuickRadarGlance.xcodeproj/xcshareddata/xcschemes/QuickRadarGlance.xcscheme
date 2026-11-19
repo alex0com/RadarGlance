@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C2AF68EE21C1C698D50B18C2"
-               BuildableName = "RadarGlance.app"
-               BlueprintName = "RadarGlance"
-               ReferencedContainer = "container:RadarGlance.xcodeproj">
+               BlueprintIdentifier = "224FB27DB4ADAD5DF4FFA604"
+               BuildableName = "QuickRadarGlance.app"
+               BlueprintName = "QuickRadarGlance"
+               ReferencedContainer = "container:QuickRadarGlance.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,10 +29,10 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EBCAD63959D04789E0EE9C75"
+               BlueprintIdentifier = "26DF6009505D927D999D6CCC"
                BuildableName = "SharedTests.xctest"
                BlueprintName = "SharedTests"
-               ReferencedContainer = "container:RadarGlance.xcodeproj">
+               ReferencedContainer = "container:QuickRadarGlance.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,10 +46,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C2AF68EE21C1C698D50B18C2"
-            BuildableName = "RadarGlance.app"
-            BlueprintName = "RadarGlance"
-            ReferencedContainer = "container:RadarGlance.xcodeproj">
+            BlueprintIdentifier = "224FB27DB4ADAD5DF4FFA604"
+            BuildableName = "QuickRadarGlance.app"
+            BlueprintName = "QuickRadarGlance"
+            ReferencedContainer = "container:QuickRadarGlance.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -58,10 +58,10 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EBCAD63959D04789E0EE9C75"
+               BlueprintIdentifier = "26DF6009505D927D999D6CCC"
                BuildableName = "SharedTests.xctest"
                BlueprintName = "SharedTests"
-               ReferencedContainer = "container:RadarGlance.xcodeproj">
+               ReferencedContainer = "container:QuickRadarGlance.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -82,10 +82,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C2AF68EE21C1C698D50B18C2"
-            BuildableName = "RadarGlance.app"
-            BlueprintName = "RadarGlance"
-            ReferencedContainer = "container:RadarGlance.xcodeproj">
+            BlueprintIdentifier = "224FB27DB4ADAD5DF4FFA604"
+            BuildableName = "QuickRadarGlance.app"
+            BlueprintName = "QuickRadarGlance"
+            ReferencedContainer = "container:QuickRadarGlance.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -101,10 +101,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C2AF68EE21C1C698D50B18C2"
-            BuildableName = "RadarGlance.app"
-            BlueprintName = "RadarGlance"
-            ReferencedContainer = "container:RadarGlance.xcodeproj">
+            BlueprintIdentifier = "224FB27DB4ADAD5DF4FFA604"
+            BuildableName = "QuickRadarGlance.app"
+            BlueprintName = "QuickRadarGlance"
+            ReferencedContainer = "container:QuickRadarGlance.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

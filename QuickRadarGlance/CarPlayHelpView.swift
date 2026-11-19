@@ -7,7 +7,7 @@ struct CarPlayHelpView: View {
                 Label("Open Settings on your iPhone", systemImage: "1.circle")
                 Label("Go to General → CarPlay", systemImage: "2.circle")
                 Label("Choose your car", systemImage: "3.circle")
-                Label("Open Widgets and add Radar Glance", systemImage: "4.circle")
+                Label("Open Widgets and add QuickRadarGlance", systemImage: "4.circle")
             }
             Section {
                 Text("""

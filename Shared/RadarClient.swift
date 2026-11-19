@@ -54,7 +54,11 @@ public enum RadarClientError: Error, Sendable, Equatable {
 /// Talks to the NOAA MRMS WMS. Quirks: errors come back as XML with HTTP 200, and a TIME that
 /// isn't listed in GetCapabilities returns a blank PNG rather than an error.
 public actor RadarClient {
-    public static let userAgent = "RadarGlance/1.0 (iOS widget; contact: radarglance@example.com)"
+    /// NOAA and the NWS API ask clients to identify themselves with a way to reach the developer.
+    public static let userAgent: String = {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        return "QuickRadarGlance/\(version) (+https://github.com/alex0com/RadarGlance)"
+    }()
     public static let requestTimeout: TimeInterval = 15
     /// Matches the server's `max-age=120`; frames arrive about every 2 min.
     public static let capabilitiesTTL: TimeInterval = 120

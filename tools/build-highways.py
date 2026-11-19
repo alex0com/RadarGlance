@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds RadarGlance/Resources/highways.bin from US Census TIGER/Line primary roads.
+"""Builds QuickRadarGlance/Resources/highways.bin from US Census TIGER/Line primary roads.
 
 Primary roads (MTFCC S1100) are interstates and other limited-access highways. TIGER/Line is
 public domain. Download and unzip it into its own directory, then pass the .shp path:
@@ -8,7 +8,7 @@ public domain. Download and unzip it into its own directory, then pass the .shp 
         https://www2.census.gov/geo/tiger/TIGER2024/PRIMARYROADS/tl_2024_us_primaryroads.zip
     unzip /tmp/tiger-dl/primaryroads.zip -d /tmp/tiger
     python3 -I tools/build-highways.py /tmp/tiger/tl_2024_us_primaryroads.shp \\
-        RadarGlance/Resources/highways.bin
+        QuickRadarGlance/Resources/highways.bin
 
 Only lines inside the CONUS radar box are kept. Each line is simplified (Douglas-Peucker) to
 TOLERANCE_M meters and stored as 1e-5 degree integers. Format (little-endian), read by
