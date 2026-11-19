@@ -47,9 +47,11 @@ public final class LocationService: NSObject, CLLocationManagerDelegate, Locatio
             // Not determined counts as off: the widget can't ask, and the app asks during onboarding.
             return .denied
         }
+        #if os(iOS)
         if Self.isWidgetExtension && !manager.isAuthorizedForWidgetUpdates {
             return .denied
         }
+        #endif
         if let location = await requestOnce() {
             let fix = Self.fix(from: location)
             store.cachedLocation = fix

@@ -78,7 +78,7 @@ struct RadarMapView: UIViewRepresentable {
         private var highwayOverlays: [HighwayOverlay] = []
         private var highwayLoad: Task<Void, Never>?
         private var wantsHighways = false
-        private var highwayDetail = HighwayOverlay.Detail.full
+        private var highwayDetail = HighwayDetail.full
         private var pinAnnotation: MKPointAnnotation?
         private var settleTask: Task<Void, Never>?
 
@@ -165,7 +165,7 @@ struct RadarMapView: UIViewRepresentable {
             let area = Self.visibleArea(of: map)
             let miles = area.width * MKMetersPerMapPointAtLatitude(MKMapPoint(x: area.midX, y: area.midY).coordinate.latitude)
                 / MercatorBox.metersPerMile
-            let detail = HighwayOverlay.Detail(visibleMiles: miles)
+            let detail = HighwayDetail(visibleMiles: miles)
             guard detail != highwayDetail else { return }
             highwayDetail = detail
             for overlay in highwayOverlays {
@@ -307,25 +307,7 @@ final class HighwayOverlay: MKMultiPolyline, @unchecked Sendable {
         super.init(polylines)
     }
 
-    /// How much highway to draw at the current zoom.
-    enum Detail {
-        /// Interstates and freeways, full width.
-        case full
-        /// Interstates only, thinner.
-        case interstates
-        /// Interstates as faint hairlines (most of the country on screen).
-        case overview
-
-        init(visibleMiles: Double) {
-            switch visibleMiles {
-            case ..<300: self = .full
-            case ..<1_000: self = .interstates
-            default: self = .overview
-            }
-        }
-    }
-
-    func makeRenderer(detail: Detail) -> MKMultiPolylineRenderer {
+    func makeRenderer(detail: HighwayDetail) -> MKMultiPolylineRenderer {
         let renderer = MKMultiPolylineRenderer(multiPolyline: self)
         renderer.lineCap = .round
         renderer.lineJoin = .round
@@ -333,23 +315,18 @@ final class HighwayOverlay: MKMultiPolyline, @unchecked Sendable {
         return renderer
     }
 
-    func style(_ renderer: MKMultiPolylineRenderer, detail: Detail) {
-        let interstate = highwayClass == .interstate
-        let width: CGFloat
-        switch detail {
-        case .full: width = interstate ? 2.5 : 1.5
-        case .interstates: width = interstate ? 1.5 : 0
-        case .overview: width = interstate ? 0.75 : 0
-        }
+    func style(_ renderer: MKMultiPolylineRenderer, detail: HighwayDetail) {
+        let width = detail.lineWidth(for: highwayClass)
         switch layer {
         case .casing:
             renderer.strokeColor = UIColor.black.withAlphaComponent(0.5)
-            renderer.lineWidth = width + 2
-            renderer.alpha = width > 0 && detail != .overview ? 1 : 0
+            renderer.lineWidth = width + HighwayDetail.casingExtraWidth
+            renderer.alpha = width > 0 && detail.showsCasing ? 1 : 0
         case .line:
-            renderer.strokeColor = interstate ? UIColor.white.withAlphaComponent(0.95) : UIColor(white: 0.88, alpha: 0.85)
+            renderer.strokeColor = highwayClass == .interstate
+                ? UIColor.white.withAlphaComponent(0.95) : UIColor(white: 0.88, alpha: 0.85)
             renderer.lineWidth = width
-            renderer.alpha = width == 0 ? 0 : detail == .overview ? 0.6 : 1
+            renderer.alpha = width == 0 ? 0 : detail.lineOpacity
         }
     }
 

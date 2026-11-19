@@ -4,6 +4,7 @@ options:
   bundleIdPrefix: com.example
   deploymentTarget:
     iOS: "26.0"
+    watchOS: "26.0"
   createIntermediateGroups: true
 
 configFiles:
@@ -32,6 +33,31 @@ targets:
         APPLICATION_EXTENSION_API_ONLY: YES
         DEFINES_MODULE: YES
 
+  # The parts of Shared that build for watchOS (no map snapshots or UIKit drawing), as the same
+  # `Shared` module.
+  SharedWatch:
+    type: framework
+    platform: watchOS
+    sources:
+      - path: Shared
+        excludes:
+          - BaseMapRenderer.swift
+          - RadarCompositor.swift
+          - RadarPipeline.swift
+          - WidgetImage.swift
+    settings:
+      base:
+        PRODUCT_NAME: Shared
+        PRODUCT_MODULE_NAME: Shared
+        # Always every architecture: Xcode's link stub of this framework isn't rebuilt when they
+        # change (one when building straight to a watch, two when embedded in the iPhone app).
+        ONLY_ACTIVE_ARCH: NO
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).quickradarglance.shared.watch
+        GENERATE_INFOPLIST_FILE: YES
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEFINES_MODULE: YES
+        TARGETED_DEVICE_FAMILY: "4"
+
   SharedTests:
     type: bundle.unit-test
     platform: iOS
@@ -51,6 +77,7 @@ targets:
     dependencies:
       - target: Shared
       - target: QuickRadarGlanceWidget
+      - target: QuickRadarGlanceWatch
     info:
       path: QuickRadarGlance/Info.plist
       properties:
@@ -61,7 +88,12 @@ targets:
         # Only HTTPS (exempt), so App Store Connect doesn't ask about export compliance per build.
         ITSAppUsesNonExemptEncryption: false
         UILaunchScreen: {}
-        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        # App Store Connect requires all four (iPad multitasking rules apply to every upload).
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         CFBundleURLTypes:
           - CFBundleURLName: $(PRODUCT_BUNDLE_IDENTIFIER)
             CFBundleURLSchemes: [quickradarglance]
@@ -106,6 +138,40 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).quickradarglance.widget
 
+  QuickRadarGlanceWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: QuickRadarGlanceWatch
+      # Same loader and player as the phone's map.
+      - path: QuickRadarGlance/RadarLoopModel.swift
+      - path: QuickRadarGlance/Resources/highways.bin
+        buildPhase: resources
+    dependencies:
+      - target: SharedWatch
+    info:
+      path: QuickRadarGlanceWatch/Info.plist
+      properties:
+        CFBundleDisplayName: QuickRadarGlance
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: $(BUNDLE_ID_PREFIX).quickradarglance
+        # Fetches radar itself; the phone only relays the network when it's nearby.
+        WKRunsIndependentlyOfCompanionApp: true
+        NSLocationWhenInUseUsageDescription: >-
+          QuickRadarGlance centers the weather radar on where you are.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).quickradarglance.watchkitapp
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "4"
+        # XcodeGen doesn't set this for watchOS apps; the embedded Shared.framework is found through it.
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/Frameworks"]
+        # See SharedWatch.
+        ONLY_ACTIVE_ARCH: NO
+
 schemes:
   QuickRadarGlance:
     build:
@@ -114,5 +180,11 @@ schemes:
         SharedTests: [test]
     test:
       targets: [SharedTests]
+    run:
+      config: Debug
+  QuickRadarGlanceWatch:
+    build:
+      targets:
+        QuickRadarGlanceWatch: all
     run:
       config: Debug

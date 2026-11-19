@@ -8,39 +8,59 @@
 
 /* Begin PBXBuildFile section */
 		017B347D4B2FE8095CDCE3D6 /* RadarClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AE4339040C996F63339738 /* RadarClientTests.swift */; };
+		03138701DA5571D0C53FA9E3 /* RadarClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE2BE024F3A73717893EAB /* RadarClient.swift */; };
+		032304768BBA1BDA644157AE /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B272DAC98E2A790C8E4CE74 /* SharedStore.swift */; };
+		0413E77203A89CFE7B44536C /* RadarPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C3D7573282680023A28864 /* RadarPalette.swift */; };
 		089F47D900DAFEFF2FB3CA97 /* service-exception.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1DE7DBE88100F98AF571CE7D /* service-exception.xml */; };
 		13650B76E06C96AD0CB2515E /* RadarPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E240EAA7B24EE98BDB549E0 /* RadarPipeline.swift */; };
 		150FD6B42EE74F237C9712EA /* HighwayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D508D30C161452DD72A964B2 /* HighwayData.swift */; };
 		2558EE44D72DA71AA4C32EF9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D3157524C730DBF2D0C4CB36 /* PrivacyInfo.xcprivacy */; };
+		2CA94F7C4F264FAE0A39AF75 /* RadarLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE94B7A0860D918A5E5476 /* RadarLoop.swift */; };
 		329A442408B4BF210479DC4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 392C46B7F8A2B28EDA1A9033 /* Assets.xcassets */; };
+		350B945FAA034E945BDB7048 /* SharedWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008B16683A76B2CB6EBC43DE /* SharedWatch.framework */; };
 		370A226B62B17E1B4891187A /* RadarClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FE2BE024F3A73717893EAB /* RadarClient.swift */; };
+		37CFEB955389CE1B32D01FBB /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EBD2A432AD0D580AFC5064 /* WeatherService.swift */; };
 		3D5D3B0F10C0AE5A26111ADA /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3ECC11FB070513FBD562888C /* RadarLoopModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B825EDF06AE13CA7A9A86601 /* RadarLoopModel.swift */; };
 		4144ED2FE100DF88931DB852 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06020DF98FFEB15B94697239 /* TestSupport.swift */; };
 		41CE49E9F0FA915CA3939A6D /* RadarLoopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5741ADFD7AFA34D1B58D4E60 /* RadarLoopTests.swift */; };
+		4668DF4EF0E55ECBD065B533 /* RadarLoopModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B825EDF06AE13CA7A9A86601 /* RadarLoopModel.swift */; };
 		47625EFBBF96A006CDB5BA34 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED4003923A7D9E0BACA1681 /* MainView.swift */; };
 		4C1A23D9195B4A122606EB5B /* HighwayDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBE4B1FFE0A2B433A5E442B /* HighwayDataTests.swift */; };
+		4D59EF37E9A1ABDD6D4E4DE1 /* MercatorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56FC8D8EFBB14C29726F919 /* MercatorBox.swift */; };
 		4EB307FED72A41C40964DA64 /* RadarIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A0615136D28222127EF5F8 /* RadarIntents.swift */; };
 		4FCDE0DA728631EA4C547C8A /* RadarLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE94B7A0860D918A5E5476 /* RadarLoop.swift */; };
+		51A1F6137629A3B52B07C4E9 /* QuickRadarGlanceWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1CD3CCA00317017A0DCF166F /* QuickRadarGlanceWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		559DA723146FEACA82E6D8A7 /* RadarRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944FB32661BDE1148C97727E /* RadarRegion.swift */; };
+		560A16DA7E554B2614C7590B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C46A853EB3F929179E49C4BC /* Assets.xcassets */; };
 		57B310EEC611E07C4D1C5B97 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; };
+		57DA147503B6E1B0C0C2F7E8 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */; };
 		631E6F7163DF0C0EDC0D34F4 /* MapSettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050264FFDA169604ED0326D9 /* MapSettingsModel.swift */; };
 		633BA3E5F07A46B88B631BB2 /* RadarMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267826853C9EA64E62780042 /* RadarMapView.swift */; };
 		6403ACCBA277E9CF1A9F72F7 /* RadarCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED29886BA95CA3D0A609159 /* RadarCache.swift */; };
+		689B8991A4BC907F617FD496 /* QuickRadarGlanceWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B4AE42112045B95131FCEB /* QuickRadarGlanceWatchApp.swift */; };
 		68DB09DAE742C139F056E675 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; };
 		6DF074946A4402F3305B0B1D /* RadarPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C3D7573282680023A28864 /* RadarPalette.swift */; };
 		6E48D3F6405C6065ADD949A3 /* MapSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F937BD80F95E2F3D388470EF /* MapSettingsTests.swift */; };
+		717E90097727EF192A198C3B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 20B282FF1AE3E2D157E98772 /* PrivacyInfo.xcprivacy */; };
 		76BDD0B681A7E4D30154CC29 /* RadarCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655F8C9D4B4EB8D9AF9FA1AE /* RadarCacheTests.swift */; };
 		780A2DF76A825B26DC474BD7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B452971F2E7EBE0CD65204DC /* PrivacyInfo.xcprivacy */; };
 		79AAD3652A4C01508704D917 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 20B282FF1AE3E2D157E98772 /* PrivacyInfo.xcprivacy */; };
 		79E87E316B800B971FE7CDF1 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90CDC40A9DCCA597CDCB58C /* LocationService.swift */; };
+		7A0D6C6EAD203A3003777B6F /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90CDC40A9DCCA597CDCB58C /* LocationService.swift */; };
 		7AA672BB7F71A9A0EEBFFCEF /* RadarAge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B66378F43118F27742DBC09 /* RadarAge.swift */; };
+		7C1B9FF88C21D39A3337A98E /* RadarFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5902BAC0AF8AA36096E41BE5 /* RadarFailure.swift */; };
 		7F92460F97B9DEF9E0482B44 /* CarPlayHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB507C938DE0F2143E0C0EF /* CarPlayHelpView.swift */; };
 		7FC683AE052847C19022E9FA /* QuickRadarGlanceWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		80DFFFBF2FFF59B0B500390D /* MercatorBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56FC8D8EFBB14C29726F919 /* MercatorBox.swift */; };
 		83067EFF156EF9F27E21845C /* WeatherServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669709C88A1601163134DDC /* WeatherServiceTests.swift */; };
+		8398AC40AD63FD0BD49BFE3B /* SharedWatch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 008B16683A76B2CB6EBC43DE /* SharedWatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		83B4F8B2860E4FD358ED2817 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EBD2A432AD0D580AFC5064 /* WeatherService.swift */; };
+		85DC90A8E3D8C5247F188388 /* RadarFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5902BAC0AF8AA36096E41BE5 /* RadarFailure.swift */; };
+		8650C51AE85B536CF1A4A482 /* HighwayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4495308FF911FD0EEB71596 /* HighwayDetail.swift */; };
 		88DFCC6E7C849887B12C2C8F /* nws-stations.json in Resources */ = {isa = PBXBuildFile; fileRef = 63B286FA4381C8C68021428F /* nws-stations.json */; };
 		8B60F2D12506704DDD7B9962 /* RadarPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FBE973B918FE7B8287E4D3F /* RadarPaletteTests.swift */; };
+		958DFF73180ADB70046DD697 /* RadarCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED29886BA95CA3D0A609159 /* RadarCache.swift */; };
 		96A63B22058623A22CEA24BD /* RadarTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2086FB125D27A9DA7EB6E /* RadarTimelineProvider.swift */; };
 		989E0D313D8EC45C21FD76BC /* nws-points.json in Resources */ = {isa = PBXBuildFile; fileRef = D1FB4C8FCDBC088F38FE1F35 /* nws-points.json */; };
 		9981789205947CA286ED6DC7 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */; };
@@ -49,23 +69,33 @@
 		9FB5E91BA6FEDCAB5D649B94 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A13889F4FD517C2B71CD1639 /* RadarCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE103DC027F7D8533A14C7 /* RadarCompositor.swift */; };
 		A2C6BA66AAF83DA8C227CD32 /* RadarSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38F4BB904DC585B05C4E0FC /* RadarSource.swift */; };
+		A81F9A8510D532428D6E3566 /* WatchRadarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E06606FAA013A568D4555C2 /* WatchRadarView.swift */; };
 		AB7E1ACBB2842A8A1CA2E3ED /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81616FE44C1D20A3DA606330 /* Shared.framework */; };
+		B1BC832012A85A7C8F95B953 /* RadarAge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B66378F43118F27742DBC09 /* RadarAge.swift */; };
 		B1D8DF438446815BABB68D1C /* highways.bin in Resources */ = {isa = PBXBuildFile; fileRef = 5F1C8BCF96E544B4D98B2F56 /* highways.bin */; };
 		B1F0C52E6CD251BF9B52D6D9 /* RadarWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8475D81B76FB42A90263DEF /* RadarWidgetView.swift */; };
+		B2E42609E41941D18C2D7B64 /* HighwayLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CA2AC0C01BAB98C0EEFAA5 /* HighwayLayer.swift */; };
+		B469E7173A1CAC23CB77CC9E /* RadarSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38F4BB904DC585B05C4E0FC /* RadarSource.swift */; };
 		B6A17E33A752235CD4E8407B /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAFAA3BC6E8474D709184E8 /* OnboardingView.swift */; };
 		BD41A3AFB534FDE0C32BD89B /* nws-hourly.json in Resources */ = {isa = PBXBuildFile; fileRef = CAD4B2BBF8AA90D769A14E11 /* nws-hourly.json */; };
 		BD8BB698CB1F7B6DD97716E1 /* RadarSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D74B307BE5D9735AC10730 /* RadarSourceTests.swift */; };
+		BE728D334CBE04E87E09A177 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CA347D5498180AC1EF78B5A4 /* PrivacyInfo.xcprivacy */; };
 		C22784A857B326CD437AD292 /* BaseMapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E81AD946141E5930BAE64F /* BaseMapRenderer.swift */; };
 		CC51BD34A9554646A993D1B1 /* QuickRadarGlanceWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED41F7E0B5DB5A8CE203185B /* QuickRadarGlanceWidget.swift */; };
 		CE3A5A1CCB3069268A0D841E /* conus-capabilities.xml in Resources */ = {isa = PBXBuildFile; fileRef = A977016A4104F4F00A0DE60A /* conus-capabilities.xml */; };
 		D63B02110B46C44212CB28B0 /* MercatorBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC25364F72FC6688F6B5BE4 /* MercatorBoxTests.swift */; };
 		D9BCAA8FA357D2326AC46285 /* nws-observation.json in Resources */ = {isa = PBXBuildFile; fileRef = 712A512343889F7F2E0FBD7C /* nws-observation.json */; };
+		DA2F3810D22592CDFF3A32BB /* HighwayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4495308FF911FD0EEB71596 /* HighwayDetail.swift */; };
+		DD97CE7CAEA97B65453F000C /* ScaleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E0411B3BA54380E1AFDACC /* ScaleBar.swift */; };
 		DE7A0709E42B6CB8F60B1E68 /* RadarPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997EF803CE7E1B38C703A3C6 /* RadarPipelineTests.swift */; };
 		DF82330C7D9E674AA796F8C4 /* nowcoast-capabilities.xml in Resources */ = {isa = PBXBuildFile; fileRef = DB00817FACE40A545D4779CC /* nowcoast-capabilities.xml */; };
 		E11EEE101281C41E5F644487 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B272DAC98E2A790C8E4CE74 /* SharedStore.swift */; };
 		E3BD778FA4DCA806CB08EA62 /* WidgetImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E641EF27B8B0DCDFA52188E /* WidgetImageTests.swift */; };
+		E5882BBC2E8A3EE705243457 /* highways.bin in Resources */ = {isa = PBXBuildFile; fileRef = 5F1C8BCF96E544B4D98B2F56 /* highways.bin */; };
 		E7E1F534539DECC88F922175 /* ScaleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E0411B3BA54380E1AFDACC /* ScaleBar.swift */; };
 		E8354F487494D6E6A290ADC2 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18CBA1E61EDD167245A992 /* AppModel.swift */; };
+		EC9CCA4D109B004BC661754C /* HighwayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D508D30C161452DD72A964B2 /* HighwayData.swift */; };
+		F131351895CAC545887137FA /* RadarPaletteTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9962E30F01A482666025582D /* RadarPaletteTable.swift */; };
 		F4CA618A3B78716C05E8FCDB /* radar-sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFF1E483E4432A14F997EF1 /* radar-sample.png */; };
 		F5C9AF479AA6E51A5790A9F2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D27414764C02B47FE8EFB5 /* SettingsView.swift */; };
 		F6392F8E3A77F30293DF4A61 /* QuickRadarGlanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1062B0C28E9F1B9AC1208F0 /* QuickRadarGlanceApp.swift */; };
@@ -80,6 +110,13 @@
 			remoteGlobalIDString = 04961C3C7F6C8C144BFAA628;
 			remoteInfo = QuickRadarGlanceWidget;
 		};
+		1321A1CC53AC656614CA6338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49E1B472955CA0454EE20035;
+			remoteInfo = QuickRadarGlanceWatch;
+		};
 		18593E3A3558F4A0E026E8A2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
@@ -93,6 +130,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B92298BEA37355453CCA753D;
 			remoteInfo = Shared;
+		};
+		9C84B5B6208BEB0CB6B66A65 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AEF403230414163CECC5FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90CEC87294E3375CDE4FB38D;
+			remoteInfo = SharedWatch;
 		};
 		CECD258E4A0924FE42F4F55A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -113,6 +157,28 @@
 				9FB5E91BA6FEDCAB5D649B94 /* Shared.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		231565252488B676C183DCBE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8398AC40AD63FD0BD49BFE3B /* SharedWatch.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		72ECDAC5AF637395D5959C27 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				51A1F6137629A3B52B07C4E9 /* QuickRadarGlanceWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9DF8F5827A7BA0EA86AE35A8 /* Embed Frameworks */ = {
@@ -140,6 +206,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		008B16683A76B2CB6EBC43DE /* SharedWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SharedWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03AE94B7A0860D918A5E5476 /* RadarLoop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarLoop.swift; sourceTree = "<group>"; };
 		050264FFDA169604ED0326D9 /* MapSettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsModel.swift; sourceTree = "<group>"; };
 		06020DF98FFEB15B94697239 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
@@ -148,6 +215,7 @@
 		14BE103DC027F7D8533A14C7 /* RadarCompositor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCompositor.swift; sourceTree = "<group>"; };
 		18F915A3238685ED8A86373C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1BC25364F72FC6688F6B5BE4 /* MercatorBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercatorBoxTests.swift; sourceTree = "<group>"; };
+		1CD3CCA00317017A0DCF166F /* QuickRadarGlanceWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickRadarGlanceWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DE7DBE88100F98AF571CE7D /* service-exception.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "service-exception.xml"; sourceTree = "<group>"; };
 		1F84B9D4F5976F215EF59105 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		20B282FF1AE3E2D157E98772 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -164,8 +232,10 @@
 		48C3D7573282680023A28864 /* RadarPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPalette.swift; sourceTree = "<group>"; };
 		53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = QuickRadarGlanceWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5741ADFD7AFA34D1B58D4E60 /* RadarLoopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarLoopTests.swift; sourceTree = "<group>"; };
+		5902BAC0AF8AA36096E41BE5 /* RadarFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarFailure.swift; sourceTree = "<group>"; };
 		5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
 		5F1C8BCF96E544B4D98B2F56 /* highways.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = highways.bin; sourceTree = "<group>"; };
+		5FA43BD7666641099E535666 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		63B286FA4381C8C68021428F /* nws-stations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-stations.json"; sourceTree = "<group>"; };
 		655F8C9D4B4EB8D9AF9FA1AE /* RadarCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarCacheTests.swift; sourceTree = "<group>"; };
 		712A512343889F7F2E0FBD7C /* nws-observation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-observation.json"; sourceTree = "<group>"; };
@@ -174,6 +244,8 @@
 		79EBD2A432AD0D580AFC5064 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
 		81616FE44C1D20A3DA606330 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8317591A1D43E006D8205385 /* QuickRadarGlance.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = QuickRadarGlance.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E06606FAA013A568D4555C2 /* WatchRadarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRadarView.swift; sourceTree = "<group>"; };
+		92B4AE42112045B95131FCEB /* QuickRadarGlanceWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRadarGlanceWatchApp.swift; sourceTree = "<group>"; };
 		944FB32661BDE1148C97727E /* RadarRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarRegion.swift; sourceTree = "<group>"; };
 		9962E30F01A482666025582D /* RadarPaletteTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPaletteTable.swift; sourceTree = "<group>"; };
 		997EF803CE7E1B38C703A3C6 /* RadarPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarPipelineTests.swift; sourceTree = "<group>"; };
@@ -184,15 +256,19 @@
 		A977016A4104F4F00A0DE60A /* conus-capabilities.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "conus-capabilities.xml"; sourceTree = "<group>"; };
 		B38F4BB904DC585B05C4E0FC /* RadarSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarSource.swift; sourceTree = "<group>"; };
 		B452971F2E7EBE0CD65204DC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B7CA2AC0C01BAB98C0EEFAA5 /* HighwayLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayLayer.swift; sourceTree = "<group>"; };
 		B825EDF06AE13CA7A9A86601 /* RadarLoopModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarLoopModel.swift; sourceTree = "<group>"; };
 		BAAFAA3BC6E8474D709184E8 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BAB507C938DE0F2143E0C0EF /* CarPlayHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayHelpView.swift; sourceTree = "<group>"; };
 		C2E0411B3BA54380E1AFDACC /* ScaleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleBar.swift; sourceTree = "<group>"; };
+		C46A853EB3F929179E49C4BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C6E25D5709B3DD24B281E3A2 /* WidgetImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetImage.swift; sourceTree = "<group>"; };
+		CA347D5498180AC1EF78B5A4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		CAD4B2BBF8AA90D769A14E11 /* nws-hourly.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-hourly.json"; sourceTree = "<group>"; };
 		D1062B0C28E9F1B9AC1208F0 /* QuickRadarGlanceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRadarGlanceApp.swift; sourceTree = "<group>"; };
 		D1FB4C8FCDBC088F38FE1F35 /* nws-points.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nws-points.json"; sourceTree = "<group>"; };
 		D3157524C730DBF2D0C4CB36 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D4495308FF911FD0EEB71596 /* HighwayDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayDetail.swift; sourceTree = "<group>"; };
 		D508D30C161452DD72A964B2 /* HighwayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayData.swift; sourceTree = "<group>"; };
 		D8475D81B76FB42A90263DEF /* RadarWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarWidgetView.swift; sourceTree = "<group>"; };
 		D90CDC40A9DCCA597CDCB58C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -209,6 +285,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2DDD22209FBE185DED4C68E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				350B945FAA034E945BDB7048 /* SharedWatch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A08388B05105A57DA68F0F01 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -241,6 +325,7 @@
 			children = (
 				A236C2F31B4B677CDF86994E /* Config */,
 				9AB46480B2A7F350DCDD3ADC /* QuickRadarGlance */,
+				FD183AC01C04BD2CBBB58E9A /* QuickRadarGlanceWatch */,
 				310B77D65383EEAFFBCF4395 /* QuickRadarGlanceWidget */,
 				6FCDFB8C2DC7D60F1668EBB5 /* Shared */,
 				6F7EB4C0D0437D1BF0C400AC /* SharedTests */,
@@ -302,6 +387,7 @@
 			children = (
 				E9E81AD946141E5930BAE64F /* BaseMapRenderer.swift */,
 				D508D30C161452DD72A964B2 /* HighwayData.swift */,
+				D4495308FF911FD0EEB71596 /* HighwayDetail.swift */,
 				D90CDC40A9DCCA597CDCB58C /* LocationService.swift */,
 				5DDAF4D04AD4386F293B1E33 /* MapSettings.swift */,
 				A56FC8D8EFBB14C29726F919 /* MercatorBox.swift */,
@@ -310,6 +396,7 @@
 				FED29886BA95CA3D0A609159 /* RadarCache.swift */,
 				41FE2BE024F3A73717893EAB /* RadarClient.swift */,
 				14BE103DC027F7D8533A14C7 /* RadarCompositor.swift */,
+				5902BAC0AF8AA36096E41BE5 /* RadarFailure.swift */,
 				03AE94B7A0860D918A5E5476 /* RadarLoop.swift */,
 				48C3D7573282680023A28864 /* RadarPalette.swift */,
 				9962E30F01A482666025582D /* RadarPaletteTable.swift */,
@@ -357,9 +444,11 @@
 			isa = PBXGroup;
 			children = (
 				8317591A1D43E006D8205385 /* QuickRadarGlance.app */,
+				1CD3CCA00317017A0DCF166F /* QuickRadarGlanceWatch.app */,
 				53FB851DD84D5E53B01FFC98 /* QuickRadarGlanceWidget.appex */,
 				81616FE44C1D20A3DA606330 /* Shared.framework */,
 				371E7DAD9CC497E5703B6D51 /* SharedTests.xctest */,
+				008B16683A76B2CB6EBC43DE /* SharedWatch.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -370,6 +459,19 @@
 				5F1C8BCF96E544B4D98B2F56 /* highways.bin */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		FD183AC01C04BD2CBBB58E9A /* QuickRadarGlanceWatch */ = {
+			isa = PBXGroup;
+			children = (
+				C46A853EB3F929179E49C4BC /* Assets.xcassets */,
+				B7CA2AC0C01BAB98C0EEFAA5 /* HighwayLayer.swift */,
+				5FA43BD7666641099E535666 /* Info.plist */,
+				CA347D5498180AC1EF78B5A4 /* PrivacyInfo.xcprivacy */,
+				92B4AE42112045B95131FCEB /* QuickRadarGlanceWatchApp.swift */,
+				8E06606FAA013A568D4555C2 /* WatchRadarView.swift */,
+			);
+			path = QuickRadarGlanceWatch;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -404,12 +506,14 @@
 				A08388B05105A57DA68F0F01 /* Frameworks */,
 				DFF0A773020DE948F47F1C4E /* Embed Foundation Extensions */,
 				9DF8F5827A7BA0EA86AE35A8 /* Embed Frameworks */,
+				72ECDAC5AF637395D5959C27 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				A54820F19BBBAD1528B69B0F /* PBXTargetDependency */,
 				9A8B500CCC2E2DADC183D32A /* PBXTargetDependency */,
+				14A1E718A19D28E3D57FD9D7 /* PBXTargetDependency */,
 			);
 			name = QuickRadarGlance;
 			packageProductDependencies = (
@@ -438,6 +542,45 @@
 			productName = SharedTests;
 			productReference = 371E7DAD9CC497E5703B6D51 /* SharedTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		49E1B472955CA0454EE20035 /* QuickRadarGlanceWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9BA4950ACFB97B8D404B5EBC /* Build configuration list for PBXNativeTarget "QuickRadarGlanceWatch" */;
+			buildPhases = (
+				DC69137C6725DE2119D04213 /* Sources */,
+				5AA117C0C956D92E86791154 /* Resources */,
+				2DDD22209FBE185DED4C68E3 /* Frameworks */,
+				231565252488B676C183DCBE /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7785CC7CF4FA247D7BFF032F /* PBXTargetDependency */,
+			);
+			name = QuickRadarGlanceWatch;
+			packageProductDependencies = (
+			);
+			productName = QuickRadarGlanceWatch;
+			productReference = 1CD3CCA00317017A0DCF166F /* QuickRadarGlanceWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		90CEC87294E3375CDE4FB38D /* SharedWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEBBBD75F29A81089ADB7DC6 /* Build configuration list for PBXNativeTarget "SharedWatch" */;
+			buildPhases = (
+				A2FE4406A6F3A56F2210D17E /* Sources */,
+				FC6D578C2ED84762F9A64C21 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SharedWatch;
+			packageProductDependencies = (
+			);
+			productName = SharedWatch;
+			productReference = 008B16683A76B2CB6EBC43DE /* SharedWatch.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		B92298BEA37355453CCA753D /* Shared */ = {
 			isa = PBXNativeTarget;
@@ -478,6 +621,14 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
+					49E1B472955CA0454EE20035 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					90CEC87294E3375CDE4FB38D = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
 					B92298BEA37355453CCA753D = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
@@ -499,9 +650,11 @@
 			projectRoot = "";
 			targets = (
 				B92298BEA37355453CCA753D /* Shared */,
+				90CEC87294E3375CDE4FB38D /* SharedWatch */,
 				26DF6009505D927D999D6CCC /* SharedTests */,
 				224FB27DB4ADAD5DF4FFA604 /* QuickRadarGlance */,
 				04961C3C7F6C8C144BFAA628 /* QuickRadarGlanceWidget */,
+				49E1B472955CA0454EE20035 /* QuickRadarGlanceWatch */,
 			);
 		};
 /* End PBXProject section */
@@ -532,6 +685,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5AA117C0C956D92E86791154 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				560A16DA7E554B2614C7590B /* Assets.xcassets in Resources */,
+				BE728D334CBE04E87E09A177 /* PrivacyInfo.xcprivacy in Resources */,
+				E5882BBC2E8A3EE705243457 /* highways.bin in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6450AE5EB6ED0D5F4822C1F3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -545,6 +708,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				780A2DF76A825B26DC474BD7 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC6D578C2ED84762F9A64C21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				717E90097727EF192A198C3B /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,12 +738,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2FE4406A6F3A56F2210D17E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC9CCA4D109B004BC661754C /* HighwayData.swift in Sources */,
+				DA2F3810D22592CDFF3A32BB /* HighwayDetail.swift in Sources */,
+				7A0D6C6EAD203A3003777B6F /* LocationService.swift in Sources */,
+				57DA147503B6E1B0C0C2F7E8 /* MapSettings.swift in Sources */,
+				4D59EF37E9A1ABDD6D4E4DE1 /* MercatorBox.swift in Sources */,
+				B1BC832012A85A7C8F95B953 /* RadarAge.swift in Sources */,
+				958DFF73180ADB70046DD697 /* RadarCache.swift in Sources */,
+				03138701DA5571D0C53FA9E3 /* RadarClient.swift in Sources */,
+				7C1B9FF88C21D39A3337A98E /* RadarFailure.swift in Sources */,
+				2CA94F7C4F264FAE0A39AF75 /* RadarLoop.swift in Sources */,
+				0413E77203A89CFE7B44536C /* RadarPalette.swift in Sources */,
+				F131351895CAC545887137FA /* RadarPaletteTable.swift in Sources */,
+				559DA723146FEACA82E6D8A7 /* RadarRegion.swift in Sources */,
+				B469E7173A1CAC23CB77CC9E /* RadarSource.swift in Sources */,
+				DD97CE7CAEA97B65453F000C /* ScaleBar.swift in Sources */,
+				032304768BBA1BDA644157AE /* SharedStore.swift in Sources */,
+				37CFEB955389CE1B32D01FBB /* WeatherService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CB326AF8782558798E307CA7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C22784A857B326CD437AD292 /* BaseMapRenderer.swift in Sources */,
 				150FD6B42EE74F237C9712EA /* HighwayData.swift in Sources */,
+				8650C51AE85B536CF1A4A482 /* HighwayDetail.swift in Sources */,
 				79E87E316B800B971FE7CDF1 /* LocationService.swift in Sources */,
 				9981789205947CA286ED6DC7 /* MapSettings.swift in Sources */,
 				80DFFFBF2FFF59B0B500390D /* MercatorBox.swift in Sources */,
@@ -580,6 +776,7 @@
 				6403ACCBA277E9CF1A9F72F7 /* RadarCache.swift in Sources */,
 				370A226B62B17E1B4891187A /* RadarClient.swift in Sources */,
 				A13889F4FD517C2B71CD1639 /* RadarCompositor.swift in Sources */,
+				85DC90A8E3D8C5247F188388 /* RadarFailure.swift in Sources */,
 				4FCDE0DA728631EA4C547C8A /* RadarLoop.swift in Sources */,
 				6DF074946A4402F3305B0B1D /* RadarPalette.swift in Sources */,
 				9CA80EF8CA5B54127B5B9144 /* RadarPaletteTable.swift in Sources */,
@@ -590,6 +787,17 @@
 				E11EEE101281C41E5F644487 /* SharedStore.swift in Sources */,
 				83B4F8B2860E4FD358ED2817 /* WeatherService.swift in Sources */,
 				F85C2D95B6234756E30CD18C /* WidgetImage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DC69137C6725DE2119D04213 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2E42609E41941D18C2D7B64 /* HighwayLayer.swift in Sources */,
+				689B8991A4BC907F617FD496 /* QuickRadarGlanceWatchApp.swift in Sources */,
+				4668DF4EF0E55ECBD065B533 /* RadarLoopModel.swift in Sources */,
+				A81F9A8510D532428D6E3566 /* WatchRadarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,6 +834,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		14A1E718A19D28E3D57FD9D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49E1B472955CA0454EE20035 /* QuickRadarGlanceWatch */;
+			targetProxy = 1321A1CC53AC656614CA6338 /* PBXContainerItemProxy */;
+		};
+		7785CC7CF4FA247D7BFF032F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90CEC87294E3375CDE4FB38D /* SharedWatch */;
+			targetProxy = 9C84B5B6208BEB0CB6B66A65 /* PBXContainerItemProxy */;
+		};
 		9A8B500CCC2E2DADC183D32A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 04961C3C7F6C8C144BFAA628 /* QuickRadarGlanceWidget */;
@@ -726,11 +944,28 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		1290B5213E6BC81C7F6E6876 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = QuickRadarGlanceWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.watchkitapp";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Debug;
 		};
@@ -812,13 +1047,36 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
+		};
+		486725D8F20BE59A9F01DCFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.shared.watch";
+				PRODUCT_MODULE_NAME = Shared;
+				PRODUCT_NAME = Shared;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
 		};
 		5B55882106F3558DECFF020A /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -833,6 +1091,23 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.sharedtests";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		630DF11FA2656413FCC4C05A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = QuickRadarGlanceWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.watchkitapp";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Release;
 		};
@@ -882,6 +1157,29 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.widget";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EBC1AFE3E0DAA21204C2B8CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID_PREFIX).quickradarglance.shared.watch";
+				PRODUCT_MODULE_NAME = Shared;
+				PRODUCT_NAME = Shared;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -943,6 +1241,24 @@
 			buildConfigurations = (
 				6D43C8069680E6A0CCD30F08 /* Debug */,
 				FF157BD5DFC54E15C1422BDD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9BA4950ACFB97B8D404B5EBC /* Build configuration list for PBXNativeTarget "QuickRadarGlanceWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1290B5213E6BC81C7F6E6876 /* Debug */,
+				630DF11FA2656413FCC4C05A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AEBBBD75F29A81089ADB7DC6 /* Build configuration list for PBXNativeTarget "SharedWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				486725D8F20BE59A9F01DCFB /* Debug */,
+				EBC1AFE3E0DAA21204C2B8CC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

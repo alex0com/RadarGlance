@@ -3,33 +3,6 @@ import Foundation
 import MapKit
 import os
 
-public enum RadarFailure: String, Error, Codable, Sendable, Equatable {
-    case locationOff
-    case locationUnavailable
-    case noCoverage
-    case network
-    case service
-
-    /// Short text for the widget. Never asks the driver to pick up the phone.
-    public var message: String {
-        switch self {
-        case .locationOff: "Location off"
-        case .locationUnavailable: "No location"
-        case .noCoverage: "No radar coverage here"
-        case .network: "Offline"
-        case .service: "Radar unavailable"
-        }
-    }
-
-    /// Whether a cached image would mislead (wrong place, or the user turned location off).
-    public var hidesImage: Bool {
-        switch self {
-        case .locationOff, .noCoverage: true
-        case .locationUnavailable, .network, .service: false
-        }
-    }
-}
-
 public struct RadarSnapshot: Sendable, Equatable {
     /// Path of the composite PNG, if there is one.
     public var imageURL: URL?
@@ -327,14 +300,7 @@ public actor RadarPipeline {
     }
 
     public static func isOffline(_ error: Error) -> Bool {
-        guard let urlError = error as? URLError else { return false }
-        switch urlError.code {
-        case .notConnectedToInternet, .networkConnectionLost, .timedOut, .cannotFindHost,
-             .cannotConnectToHost, .dnsLookupFailed, .dataNotAllowed, .internationalRoamingOff:
-            return true
-        default:
-            return false
-        }
+        RadarFailure.isOffline(error)
     }
 
     static func describe(_ error: Error) -> String {

@@ -7,6 +7,8 @@ Live NOAA weather radar for the continental US, centered on where you are:
 - **An app** with a full-screen radar map that animates the last 30 minutes to 2 hours, with
   pinch-zoom, panning, highway lines that stay visible in heavy rain, and several radar color
   schemes.
+- **A watch app** with the same animated radar over Apple Maps: turn the Digital Crown to zoom,
+  drag to pan.
 
 Radar comes from NOAA's MRMS mosaic (opengeo, with nowCOAST as an automatic backup); temperature
 and humidity come from the National Weather Service API. No accounts or API keys.
@@ -46,6 +48,20 @@ xcrun devicectl device simulate location clear --device <device-udid>
 The bottom bar plays and pauses the loop and scrubs through the frames; the buttons on the right
 open Settings, refresh the radar, and recenter on you. Tapping the widget opens this map.
 
+### The watch app
+
+| Up close (Orlando) | Regional (California) | Whole coverage area |
+|---|---|---|
+| <img src="docs/screenshots/watch-orlando.png" width="208" alt="Watch app: heavy rain over Orlando with interstate and freeway lines"> | <img src="docs/screenshots/watch-california.png" width="208" alt="Watch app: rain over California's Central Valley with interstates"> | <img src="docs/screenshots/watch-conus.png" width="208" alt="Watch app zoomed out to the continental US, interstates as thin lines"> |
+
+The Digital Crown zooms and dragging pans. The button at the top left recenters on you; the bottom
+bar plays and pauses the loop and shows the frame's time. Highway lines are always drawn, thinning
+as the map zooms out like on the phone.
+
+Taken in the watch Simulator (see [Run the watch app](#run-the-watch-app) below) with the
+location set by `xcrun simctl location` and the launch argument `-mapWidthMiles 90`, `450`, or
+`3300`. The watch Simulator can't override its clock, so it shows the real time.
+
 ### CarPlay
 
 The widget is the same small widget in the CarPlay Dashboard. A CarPlay screenshot isn't
@@ -73,9 +89,10 @@ xcrun devicectl device capture screenshot --device <device-udid> \
   BUNDLE_ID_PREFIX = com.yourname
   ```
 
-  The app becomes `<prefix>.quickradarglance`, the widget `<prefix>.quickradarglance.widget`, and the
-  shared App Group `group.<prefix>.quickradarglance` (read at runtime from each Info.plist's
-  `AppGroupIdentifier`). Automatic signing registers them on the first device build.
+  The app becomes `<prefix>.quickradarglance`, the widget `<prefix>.quickradarglance.widget`, the
+  watch app `<prefix>.quickradarglance.watchkitapp`, and the shared App Group
+  `group.<prefix>.quickradarglance` (read at runtime from each Info.plist's `AppGroupIdentifier`).
+  Automatic signing registers them on the first device build.
 
 ## Build and test
 
@@ -105,12 +122,32 @@ Launch arguments (Debug builds):
 | Argument | Effect |
 |---|---|
 | `-testLocation 35.47,-97.52` | Use this position instead of GPS (app only). |
-| `-mapWidthMiles 2600` | Start the map this wide (the zoom settings stop at 160 mi). |
+| `-mapWidthMiles 2600` | Start the map this wide (the zoom settings stop at 160 mi). Also works for the watch app. |
 | `-showSettings YES` | Open Settings on launch. |
 
 The README screenshots were taken this way, with
 `xcrun simctl status_bar <sim> override --time 9:41 --batteryState charged --batteryLevel 100`
 and map settings written to the App Group's `mapSettings` default.
+
+### Run the watch app
+
+The watch app has its own scheme and runs on its own (it fetches radar itself; the phone only
+relays the network when nearby). In the watch Simulator, the scroll wheel or trackpad scroll is
+the Digital Crown.
+
+```sh
+xcrun simctl boot "Apple Watch Series 11 (46mm)"
+xcodebuild -scheme QuickRadarGlanceWatch -destination 'platform=watchOS Simulator,name=Apple Watch Series 11 (46mm)' \
+    -derivedDataPath build/DerivedData build
+xcrun simctl install "Apple Watch Series 11 (46mm)" build/DerivedData/Build/Products/Debug-watchsimulator/QuickRadarGlanceWatch.app
+xcrun simctl location "Apple Watch Series 11 (46mm)" set 25.95,-80.25
+xcrun simctl launch "Apple Watch Series 11 (46mm)" com.example.quickradarglance.watchkitapp
+```
+
+watchOS maps can't draw overlays, so the radar frame is an image laid over the map and moved with
+it on every camera change. Highway lines are drawn the same way, always on, so the radar keeps its
+landmarks even when the watch can't load map tiles. The watch uses the default map settings and
+keeps its own loop length.
 
 Settings → Debug shows the BBOX, WMS URL, HTTP status, radar source, radar/fetch times, base map
 reuse, alignment error, the animation's frames, the widget's last weather reading, and widget
@@ -131,6 +168,22 @@ xcrun devicectl device install app --device <device-udid> \
 
 Open QuickRadarGlance once and allow location **While Using** (widgets can't use location unless
 the app has it).
+
+The watch app is embedded in the iPhone app. Once the iPhone app is installed, it appears in the
+Watch app on the iPhone (My Watch → Available Apps) if it doesn't install automatically.
+
+To install straight onto the watch instead, turn on Developer Mode on the watch too, keep its
+Wi-Fi on (the Mac reaches it over the network), and build with the watch as the destination. That
+build also registers the watch with your team; until then its install fails with "This
+provisioning profile cannot be installed on this device".
+
+```sh
+xcrun devicectl list devices                     # note the watch's identifier
+xcodebuild -scheme QuickRadarGlanceWatch -destination 'id=<watch-udid>' \
+    -derivedDataPath build/DerivedData -allowProvisioningUpdates build
+xcrun devicectl device install app --device <watch-udid> \
+    build/DerivedData/Build/Products/Debug-watchos/QuickRadarGlanceWatch.app
+```
 
 ## Publish to TestFlight
 
@@ -213,5 +266,8 @@ Turn on temperature and humidity in the app: Settings → Widget → Temperature
       extrapolated).
 - [ ] Tapping the widget (outside the refresh button) opens the app on the radar map,
       recentered on you; the refresh button still refreshes without opening the app.
+- [ ] On a real Apple Watch: the Digital Crown zooms, dragging pans, the radar keeps up with the
+      map while moving, and memory stays reasonable during a 2 hr loop (63 MB in the Simulator
+      with a 1 hr loop).
 - [ ] Radar edges line up with coastlines (needs a day with coastal precipitation;
       the snapshot-corner alignment check reports ~0 px).

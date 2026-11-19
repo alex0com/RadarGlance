@@ -172,7 +172,7 @@ final class RadarLoopModel {
             } catch {
                 guard !Task.isCancelled else { return }
                 lastError = error
-                if RadarPipeline.isOffline(error) { break }
+                if RadarFailure.isOffline(error) { break }
             }
         }
         // Keep showing the previous frames rather than nothing.
@@ -273,7 +273,7 @@ final class RadarLoopModel {
     }
 
     private static func failure(for error: Error) -> RadarFailure {
-        RadarPipeline.isOffline(error) ? .network : .service
+        RadarFailure.isOffline(error) ? .network : .service
     }
 
     // MARK: Playback
